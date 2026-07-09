@@ -72,16 +72,20 @@ private theorem sqrt13_lt_4 : Real.sqrt 13 < 4 := by
     exact (Real.sqrt_sq (by norm_num)).symm
   rw [h16]; exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
 
+private theorem two_sqrt13_lt_8 : (2 : ℝ) * Real.sqrt 13 < 8 := by
+  linarith [sqrt13_lt_4]
+
 theorem C_S14_143_gt_tau : C_S14_143 > 2 * Real.sqrt 13 := by
   unfold C_S14_143
-  have h8 : (8 : ℝ) < 862925199 / 100000000 := by norm_num
-  linarith [sqrt13_lt_4, h8]
+  have h : 2 * Real.sqrt 13 < 8 := two_sqrt13_lt_8
+  have h8 : (8 : ℝ) < 8.62925199 := by norm_num
+  linarith
 
 theorem C_S4_143_gt_tau : (C_S4_143 : ℝ) > 2 * Real.sqrt 13 := by
   have hC : (C_S4_143 : ℝ) > 11 := by
     have : C_S4_143 > 11 := by unfold C_S4_143; norm_num
     exact_mod_cast this
-  linarith [sqrt13_lt_4]
+  linarith [two_sqrt13_lt_8]
 
 theorem bost_connes_threshold :
     2 * Real.sqrt ((X₀ 143).genus : ℝ) < (320 : ℝ) := by
