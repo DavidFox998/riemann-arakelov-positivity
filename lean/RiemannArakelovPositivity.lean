@@ -25,7 +25,7 @@ Axiom footprint: {propext, Classical.choice, Quot.sound}
 
 namespace RiemannArakelovPositivity
 
-open Real Complex
+open Real Complex Filter
 
 -- ===========================================================================
 -- §1. Arithmetic surface and modular curve X₀(143)
@@ -118,7 +118,7 @@ theorem arakelovPairing_X0_143_pos : (0 : ℝ) < arakelovPairing_X0_143 := by
     rw [log_143_eq_log_11_add_log_13]; ring
   have h12 : (0 : ℝ) < 12 * Real.log 13 := mul_pos (by norm_num) h13
   unfold arakelovPairing_X0_143 K_143_val K_infty_143
-  linarith
+  nlinarith
 
 -- ===========================================================================
 -- §4. Concrete L-function for E_143a1 (from BSD tower)
@@ -248,34 +248,34 @@ def ZeroRepulsion : Prop :=
 theorem exp_loglog_dominates_sq (C c₁ : ℝ) (hC : 0 < C) (hc₁ : 0 < c₁) :
     ∀ᶠ t in atTop,
       C * (Real.log t) ^ 2 < Real.exp (c₁ * Real.log t / Real.log (Real.log t)) := by
-  have hkey : Tendsto (fun x : ℝ => Real.exp x / x ^ 2) atTop atTop :=
+  have hkey : Filter.Tendsto (fun x : ℝ => Real.exp x / x ^ 2) atTop atTop :=
     tendsto_exp_div_pow_atTop 2
-  have hll : Tendsto (fun t : ℝ => Real.log (Real.log t)) atTop atTop := by
-    apply Tendsto.comp Real.tendsto_log_atTop
-    filter_upwards [eventually_ge_atTop (Real.exp 1 : ℝ)] with t ht
+  have hll : Filter.Tendsto (fun t : ℝ => Real.log (Real.log t)) atTop atTop := by
+    apply Filter.Tendsto.comp Real.tendsto_log_atTop
+    filter_upwards [Filter.eventually_ge_atTop (Real.exp 1 : ℝ)] with t ht
     exact Real.log_pos ht
-  have hl : Tendsto (fun t : ℝ => Real.log t) atTop atTop := Real.tendsto_log_atTop
-  have hr : Tendsto (fun t : ℝ => c₁ * Real.log t / Real.log (Real.log t)) atTop atTop := by
-    have hp : ∀ᶠ t in atTop, (0 : ℝ) < Real.log (Real.log t) := by
-      filter_upwards [eventually_ge_atTop (Real.exp (Real.exp 1) : ℝ)] with t ht
-      exact Real.log_pos (Real.log_pos ht)
-    have hd : Tendsto (fun t : ℝ => Real.log t / Real.log (Real.log t)) atTop atTop := by
-      exact Tendsto.div_atTop hll hl (fun t ht => (Real.log_pos (Real.log_pos ht)).ne')
-    simpa using Tendsto.mul_const (c := c₁) hd
-  have he : Tendsto (fun t : ℝ =>
+  have hl : Filter.Tendsto (fun t : ℝ => Real.log t) atTop atTop := Real.tendsto_log_atTop
+  have hp : ∀ᶠ t in atTop, (0 : ℝ) < Real.log (Real.log t) := by
+    filter_upwards [Filter.eventually_ge_atTop (Real.exp (Real.exp 1) : ℝ)] with t ht
+    exact Real.log_pos (Real.log_pos ht)
+  have hd : Filter.Tendsto (fun t : ℝ => Real.log t / Real.log (Real.log t)) atTop atTop := by
+    exact Filter.Tendsto.div_atTop hl hll (fun t ht => (Real.log_pos (Real.log_pos ht)).ne')
+  have hr : Filter.Tendsto (fun t : ℝ => c₁ * Real.log t / Real.log (Real.log t)) atTop atTop := by
+    simpa using Filter.Tendsto.mul_const (c := c₁) hd
+  have he : Filter.Tendsto (fun t : ℝ =>
       Real.exp (c₁ * Real.log t / Real.log (Real.log t))) atTop atTop :=
-    Tendsto.comp Real.tendsto_exp_atTop hr
-  have h2 : Tendsto (fun t : ℝ => (Real.log t) ^ 2) atTop atTop := by
+    Filter.Tendsto.comp Real.tendsto_exp_atTop hr
+  have h2 : Filter.Tendsto (fun t : ℝ => (Real.log t) ^ 2) atTop atTop := by
     exact hl.pow_atTop (by norm_num : (0 : ℕ) < 2)
-  have hd2 : Tendsto (fun t : ℝ =>
+  have hd2 : Filter.Tendsto (fun t : ℝ =>
       Real.exp (c₁ * Real.log t / Real.log (Real.log t)) / (Real.log t) ^ 2) atTop atTop := by
-    exact Tendsto.div_atTop h2 he (fun t ht => (pow_pos (Real.log_pos ht) 2).ne')
+    exact Filter.Tendsto.div_atTop h2 he (fun t ht => (pow_pos (Real.log_pos ht) 2).ne')
   filter_upwards [hd2] with t ht
-  have hp : 0 < (Real.log t) ^ 2 := by
+  have hlog2_pos : 0 < (Real.log t) ^ 2 := by
     by_cases h : Real.log t = 0
     · simp [h]; exact hC
     · exact sq_pos_of_ne_zero _ h
-  exact (lt_div_iff₀ hp).mp ht
+  exact (lt_div_iff₀ hlog2_pos).mp ht
 
 /-- **Route A conditional**: GrowthBound + ZeroRepulsion → RH.
     GrowthBound is FALSE (Titchmarsh §8). ZeroRepulsion is OPEN.
@@ -289,7 +289,7 @@ theorem riemannHypothesis_of_growth_and_repulsion
   by_contra hcontra
   obtain ⟨c₁, hc₁, hlarge⟩ := hR ⟨s, hs, htriv, hs1, hcontra⟩
   obtain ⟨C, hC, hbound⟩ := hG
-  have hdom := eventually_atTop.1 (exp_loglog_dominates_sq C c₁ hC hc₁)
+  have hdom := Filter.eventually_atTop.1 (exp_loglog_dominates_sq C c₁ hC hc₁)
   obtain ⟨T, hT⟩ := hdom
   obtain ⟨t, htT, htlarge⟩ := hlarge T
   have ht2 : 2 ≤ t := by linarith [show (0:ℝ) ≤ T from le_of_lt (hT t htT).le.trans (by positivity)]
