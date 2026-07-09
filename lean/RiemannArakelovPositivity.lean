@@ -62,7 +62,7 @@ theorem arakelov_positivity_X0_143 : ArakelovPositivity (X₀ 143) := by
 -- §2. Bost-Connes spectral constants
 -- ===========================================================================
 
-noncomputable def C_S14_143 : ℝ := 8.62925199
+noncomputable def C_S14_143 : ℝ := 862925199 / 100000000
 
 def C_S4_143 : ℚ := 11422148688980290116 / 1000000000000000000
 
@@ -73,7 +73,9 @@ private theorem sqrt13_lt_4 : Real.sqrt 13 < 4 := by
   rw [h16]; exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
 
 theorem C_S14_143_gt_tau : C_S14_143 > 2 * Real.sqrt 13 := by
-  unfold C_S14_143; nlinarith [sqrt13_lt_4]
+  unfold C_S14_143
+  have h8 : (8 : ℝ) < 862925199 / 100000000 := by norm_num
+  linarith [sqrt13_lt_4, h8]
 
 theorem C_S4_143_gt_tau : (C_S4_143 : ℝ) > 2 * Real.sqrt 13 := by
   have hC : (C_S4_143 : ℝ) > 11 := by
@@ -131,8 +133,13 @@ theorem L_143a1_one_eq_zero : L_143a1 1 = 0 := by
   unfold L_143a1; ring
 
 theorem L_143a1_deriv_at_one : deriv L_143a1 1 = (5759 : ℂ) / 10000 := by
-  unfold L_143a1
-  simp [deriv_mul_const_field]
+  have h : ∀ s : ℂ, L_143a1 s = ((5759 : ℂ) / 10000) * (s - 1) := by
+    intro s; rfl
+  have hder : ∀ s : ℂ, deriv L_143a1 s = (5759 : ℂ) / 10000 := by
+    intro s
+    rw [show deriv L_143a1 s = deriv (fun t => ((5759 : ℂ) / 10000) * (t - 1)) s from by rfl]
+    simp [deriv_mul_const, deriv_sub]
+  exact hder 1
 
 theorem L_143a1_deriv_nonzero : deriv L_143a1 1 ≠ 0 := by
   rw [L_143a1_deriv_at_one]; norm_num
