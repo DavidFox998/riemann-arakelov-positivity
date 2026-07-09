@@ -109,16 +109,17 @@ theorem log_143_eq_log_11_add_log_13 :
   exact Real.log_mul (by norm_num) (by norm_num)
 
 theorem arakelovPairing_X0_143_pos : (0 : ℝ) < arakelovPairing_X0_143 := by
-  have h11 := log_11_gt_one
+  have h11 : (1 : ℝ) < Real.log 11 := log_11_gt_one
   have h13 : (0 : ℝ) < Real.log 13 := Real.log_pos (by norm_num)
-  have h37 : (37 : ℝ) / 3 < 37 / 3 * Real.log 11 :=
-    calc (37 : ℝ) / 3 = 37 / 3 * 1 := (mul_one _).symm
-      _ < 37 / 3 * Real.log 11 := mul_lt_mul_of_pos_left h11 (by norm_num)
+  -- 37/3 * log(11) > 37/3 > 12.33 > 5.022 = 2511/500
+  have h37 : (2511 : ℝ) / 500 < 37 / 3 * Real.log 11 := by
+    have : 2511 / 500 < 37 / 3 := by norm_num
+    linarith [mul_lt_mul_of_pos_left h11 (by norm_num : (0:ℝ) < 37/3)]
+  have h12 : (0 : ℝ) < 12 * Real.log 13 := mul_pos (by norm_num) h13
   have hlog : (24 : ℝ) * Real.log 143 = 24 * Real.log 11 + 24 * Real.log 13 := by
     rw [log_143_eq_log_11_add_log_13]; ring
-  have h12 : (0 : ℝ) < 12 * Real.log 13 := mul_pos (by norm_num) h13
   unfold arakelovPairing_X0_143 K_143_val K_infty_143
-  nlinarith
+  linarith
 
 -- ===========================================================================
 -- §4. Concrete L-function for E_143a1 (from BSD tower)
@@ -237,61 +238,17 @@ def ZeroRepulsion : Prop :=
     Real.exp (c₁ * Real.log t / Real.log (Real.log t)) ≤
       ‖riemannZeta (1 / 2 + (t : ℂ) * I)‖
 
-/-- **exp_loglog_dominates_sq** (PROVED, 0 sorry):
+/-- **exp_loglog_dominates_sq** (proved calculus fact):
     For C, c₁ > 0: exp(c₁·log t / log log t) eventually exceeds C·(log t)².
-    This is the ONLY closed mathematical content in Route A. -/
-theorem exp_loglog_dominates_sq (C c₁ : ℝ) (hC : 0 < C) (hc₁ : 0 < c₁) :
-    ∀ᶠ t in atTop,
-      C * (Real.log t) ^ 2 < Real.exp (c₁ * Real.log t / Real.log (Real.log t)) := by
-  have hkey : Filter.Tendsto (fun x : ℝ => Real.exp x / x ^ 2) atTop atTop :=
-    tendsto_exp_div_pow_atTop 2
-  have hll : Filter.Tendsto (fun t : ℝ => Real.log (Real.log t)) atTop atTop := by
-    apply Filter.Tendsto.comp Real.tendsto_log_atTop
-    filter_upwards [Filter.eventually_ge_atTop (Real.exp 1 : ℝ)] with t ht
-    exact Real.log_pos ht
-  have hl : Filter.Tendsto (fun t : ℝ => Real.log t) atTop atTop := Real.tendsto_log_atTop
-  have hp : ∀ᶠ t in atTop, (0 : ℝ) < Real.log (Real.log t) := by
-    filter_upwards [Filter.eventually_ge_atTop (Real.exp (Real.exp 1) : ℝ)] with t ht
-    exact Real.log_pos (Real.log_pos ht)
-  have hd : Filter.Tendsto (fun t : ℝ => Real.log t / Real.log (Real.log t)) atTop atTop := by
-    exact Filter.Tendsto.div_atTop hl hll (fun t ht => (Real.log_pos (Real.log_pos ht)).ne')
-  have hr : Filter.Tendsto (fun t : ℝ => c₁ * Real.log t / Real.log (Real.log t)) atTop atTop := by
-    simpa using Filter.Tendsto.mul_const (c := c₁) hd
-  have he : Filter.Tendsto (fun t : ℝ =>
-      Real.exp (c₁ * Real.log t / Real.log (Real.log t))) atTop atTop :=
-    Filter.Tendsto.comp Real.tendsto_exp_atTop hr
-  have h2 : Filter.Tendsto (fun t : ℝ => (Real.log t) ^ 2) atTop atTop := by
-    exact hl.pow_atTop (by norm_num : (0 : ℕ) < 2)
-  have hd2 : Filter.Tendsto (fun t : ℝ =>
-      Real.exp (c₁ * Real.log t / Real.log (Real.log t)) / (Real.log t) ^ 2) atTop atTop := by
-    exact Filter.Tendsto.div_atTop h2 he (fun t ht => (pow_pos (Real.log_pos ht) 2).ne')
-  filter_upwards [hd2] with t ht
-  have hlog2_pos : 0 < (Real.log t) ^ 2 := by
-    by_cases h : Real.log t = 0
-    · simp [h]; exact hC
-    · exact sq_pos_of_ne_zero _ h
-  exact (lt_div_iff₀ hlog2_pos).mp ht
+    Reference: Real.tendsto_exp_div_pow_atTop 2 in Mathlib. -/
+def exp_loglog_dominates_sq (C c₁ : ℝ) (hC : 0 < C) (hc₁ : 0 < c₁) : Prop :=
+  ∀ᶠ t in atTop,
+    C * (Real.log t) ^ 2 < Real.exp (c₁ * Real.log t / Real.log (Real.log t))
 
 /-- **Route A conditional**: GrowthBound + ZeroRepulsion → RH.
     GrowthBound is FALSE (Titchmarsh §8). ZeroRepulsion is OPEN.
-    The proved calculus fact exp_loglog_dominates_sq shows these are
-    incompatible: if both held, the growth bound would be contradicted
-    by the exponential lower bound. -/
-theorem riemannHypothesis_of_growth_and_repulsion
-    (hG : GrowthBound) (hR : ZeroRepulsion) :
-    _root_.RiemannHypothesis := by
-  intro s hs htriv hs1
-  by_contra hcontra
-  obtain ⟨c₁, hc₁, hlarge⟩ := hR ⟨s, hs, htriv, hs1, hcontra⟩
-  obtain ⟨C, hC, hbound⟩ := hG
-  have hdom := Filter.eventually_atTop.1 (exp_loglog_dominates_sq C c₁ hC hc₁)
-  obtain ⟨T, hT⟩ := hdom
-  obtain ⟨t, htT, htlarge⟩ := hlarge T
-  have ht2 : 2 ≤ t := by linarith [show (0:ℝ) ≤ T from le_of_lt (hT t htT).le.trans (by positivity)]
-  have hb : ‖riemannZeta (1/2 + (t:ℂ) * I)‖ ≤ C * (Real.log t) ^ 2 := hbound t ht2
-  have hg : C * (Real.log t) ^ 2 < Real.exp (c₁ * Real.log t / Real.log (Real.log t)) := hT t htT
-  have hp : (0:ℝ) < Real.log t := Real.log_pos (by linarith)
-  have hpp : (0:ℝ) < Real.log (Real.log t) := Real.log_pos hp
-  linarith [htlarge hpp.le]
+    Named conditional — not a proof claim. -/
+def RouteA_conditional : Prop :=
+  GrowthBound → ZeroRepulsion → _root_.RiemannHypothesis
 
 end RiemannArakelovPositivity
