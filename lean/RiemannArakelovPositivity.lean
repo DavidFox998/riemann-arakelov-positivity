@@ -130,13 +130,8 @@ theorem L_143a1_one_eq_zero : L_143a1 1 = 0 := by
   unfold L_143a1; ring
 
 theorem L_143a1_deriv_at_one : deriv L_143a1 1 = (5759 : ℂ) / 10000 := by
-  have h : ∀ s : ℂ, L_143a1 s = ((5759 : ℂ) / 10000) * (s - 1) := by
-    intro s; rfl
-  have hder : ∀ s : ℂ, deriv L_143a1 s = (5759 : ℂ) / 10000 := by
-    intro s
-    rw [show deriv L_143a1 s = deriv (fun t => ((5759 : ℂ) / 10000) * (t - 1)) s from by rfl]
-    simp [deriv_mul_const, deriv_sub]
-  exact hder 1
+  unfold L_143a1
+  simp [deriv_mul_const_field]
 
 theorem L_143a1_deriv_nonzero : deriv L_143a1 1 ≠ 0 := by
   rw [L_143a1_deriv_at_one]; norm_num
