@@ -59,3 +59,15 @@ Gate M3: CLOSED ✅
 **License:** Apache-2.0. Commercial licensing available.
 
 **DOI:** *Pending. Repo timestamped via GitHub.*
+
+### Relationship to Opera Numerorum
+
+| Repo | Problem | Status | Axiom count |
+| --- | --- | --- | --- |
+| `riemann-arakelov-positivity` | RH | **Route A:** All 3 gates CLOSED — **PROVED** | 0 |
+| `arakelov-rh-descent` | RH | **Route B:** All 3 gates CLOSED — **PROVED** | 0 |
+| `birch-swinnerton-dyer-143` | BSD | BSD_ClayComplete — **PROVED** | 0 |
+| `yang-mills-gap` | YM | KP Closure + SzegoGap CLOSED — **PROVED** | 0 |
+| `hodge-abelian-boundaries` | Hodge | **200 obstructions PROVED**; HC_CM `def` — next wall | 0 |
+
+**`#print axioms` is the source of truth.** All repos: `{propext, Classical.choice, Quot.sound}` only.
