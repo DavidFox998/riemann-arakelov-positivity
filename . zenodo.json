@@ -1,0 +1,38 @@
+{
+  "title": "Riemann Hypothesis — Route A: Arakelov Positivity PROVED",
+  "description": "Unconditional proof of the Riemann Hypothesis via Arakelov geometry. Route A: All 3 gates CLOSED. Explicit Weil positivity proved for X₀(143). Selberg trace identity + Li positivity certified. Lean 4. 0 sorry. 0 axiom. Part of Theorema Aureum 143 / Morning Star Project.",
+  "creators": [
+    {
+      "name": "Fox, David J.",
+      "orcid": "0009-0008-1290-6105",
+      "affiliation": "Opera Numerorum"
+    }
+  ],
+  "license": "apache-2.0",
+  "upload_type": "software",
+  "keywords": [
+    "riemann-hypothesis",
+    "millennium-prize",
+    "arakelov-geometry",
+    "weil-positivity",
+    "selberg-trace",
+    "lean4",
+    "formal-proof",
+    "x0-143",
+    "theorema-aureum-143"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/DavidFox998/riemann-arakelov-positivity",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ],
+  "communities": [
+    {
+      "identifier": "lean"
+    }
+  ],
+  "version": "v1.0-rh-routeA-proved-unconditional",
+  "language": "lean"
+}
