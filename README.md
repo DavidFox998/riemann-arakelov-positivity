@@ -1,6 +1,6 @@
 # Riemann Hypothesis via Arakelov Positivity — X₀(143)
 
-### What this is
+### What this is-Route A
 
 The Riemann Hypothesis says all non-trivial zeros of ζ(s) lie on Re(s) = 1/2.
 
