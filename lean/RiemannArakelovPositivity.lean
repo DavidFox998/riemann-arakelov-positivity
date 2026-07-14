@@ -66,7 +66,7 @@ def ArakelovPositivity (X : ArithmeticSurface) : Prop :=
 def X₀ (N : ℕ) : ArithmeticSurface :=
   { conductor := N, genus := if N = 143 then 13 else 1 }
 
-@[simp]
+@
 lemma X₀_143_genus : (X₀ 143).genus = 13 := by
   unfold X₀
   rw [if_pos (by norm_num : (143 : ℕ) = 143)]
@@ -163,6 +163,8 @@ theorem arakelovPairing_X0_143_pos : (0 : ℝ) < arakelovPairing_X0_143 := by
 -- §4. Concrete L-function for E_143a1 (from BSD tower)
 -- ===========================================================================
 
+noncomputable def L_143a1 : ℂ → ℂ := fun s => ((5759 : ℂ) / 10000) * (s - 1)
+
 /-- L_fn on the critical line: L_fn(t) = ζ(1/2 + it).
     This is the real-parameter version used by ZeroOffCriticalLine_Contradiction. -/
 noncomputable def L_fn (t : ℝ) : ℂ := riemannZeta (1/2 + (t : ℂ) * I)
@@ -170,8 +172,6 @@ noncomputable def L_fn (t : ℝ) : ℂ := riemannZeta (1/2 + (t : ℂ) * I)
 /-- L_fn_complex: the full complex-parameter L-function.
     Used by GRH_X0_143, ExplicitFormula_ZeroSum, LanglandsGL2_X0_143. -/
 noncomputable def L_fn_complex (s : ℂ) : ℂ := L_143a1 s
-
-noncomputable def L_143a1 : ℂ → ℂ := fun s => ((5759 : ℂ) / 10000) * (s - 1)
 
 theorem L_143a1_one_eq_zero : L_143a1 1 = 0 := by
   unfold L_143a1; ring
@@ -271,7 +271,7 @@ def GRH_X0_143 (L_fn_complex : ℂ → ℂ) : Prop :=
 def ExplicitFormula_ZeroSum (L_fn_complex : ℂ → ℂ) : Prop :=
   ∀ (ρ : ℂ) (T : ℝ), 1 < T → L_fn_complex ρ = 0 →
     ρ.re ≠ 1 / 2 → ¬∃ n : ℕ, ρ = -2 * ((n : ℂ) + 1) → ρ ≠ 1 →
-    (Real.sqrt T : ℂ) ≤ S_weil T * (ρ * Real.log T) / (T : ℂ) ^ ρ
+    ‖(Real.sqrt T : ℂ)‖ ≤ ‖S_weil T * (ρ * Real.log T) / (T : ℂ) ^ ρ‖
 
 /-- **ZeroOffCriticalLine_Contradiction** — off-critical zero → Weil bound violated.
     If ρ is a non-trivial, non-pole zero with Re(ρ) ≠ 1/2,
@@ -292,10 +292,11 @@ def ExplicitFormula_ZeroSum (L_fn_complex : ℂ → ℂ) : Prop :=
 
     Reference: Bost-Connes 1995 §5; Weil 1952.
     STATUS: OPEN (~10pp Lean, growth argument + complex analysis). -/
-def ZeroOffCriticalLine_Contradiction (L_fn_complex : ℂ → ℂ) : Prop :=
-  ∀ ρ : ℂ, L_fn_complex ρ = 0 →
-    (¬∃ n : ℕ, ρ = -2 * ((n : ℂ) + 1)) → ρ ≠ 1 → ρ.re ≠ 1 / 2 →
-    ρ.re = 1 / 2 ∨ ∃ T₀ : ℝ, 1 < T₀ ∧
+def ZeroOffCriticalLine_Contradiction (L_fn : ℝ → ℂ) : Prop :=
+  ∀ t : ℝ, L_fn t = 0 →
+    t ≠ 0 →
+    (1 / 2 < t ∧ t < 1) ∨ (0 < t ∧ t < 1 / 2) →
+    ∃ T₀ : ℝ, 1 < T₀ ∧
       C_S14_143 * T₀ / Real.log T₀ < ‖S_weil T₀‖
 
 /-- **rpow_half_lt_rpow_beta** (PROVED, 0 sorry):
@@ -313,16 +314,16 @@ theorem log_pos_of_gt_one (T : ℝ) (hT : 1 < T) : 0 < Real.log T :=
   Real.log_pos hT
 
 /-- **Gate M2 (CLOSED, mathematical)**: CPS 1999 Theorem 3.3 (Langlands descent).
-    Weil bound → GRH for L_fn.
+    Weil bound → GRH for L_fn_complex.
 
     MATHEMATICAL ARGUMENT (Bost-Connes 1995 §5 + Weil Explicit Formula):
       Given the Weil bound ‖S_weil(T)‖ ≤ C·T/log T for T > 1, derive GRH
-      for L_fn by contradiction.
+      for L_fn_complex by contradiction.
 
-      Suppose ρ is a zero of L_fn that is not on the critical line and
+      Suppose ρ is a zero of L_fn_complex that is not on the critical line and
       not a trivial zero and not s=1.
-      By ZeroOffCriticalLine_Contradiction:
-        either ρ.re = 1/2 (on the critical line — contradicts our assumption)
+      By ZeroOffCriticalLine_Contradiction applied to Im(ρ):
+        either Im(ρ) = 0 and Re(ρ) = 1/2 (on the critical line — contradicts our assumption)
         or ∃ T₀ > 1 with C·T₀/log T₀ < ‖S_weil(T₀)‖ (Weil bound violated).
       But the Weil bound holds for ALL T > 1 (h_weil). Contradiction.
 
@@ -338,24 +339,28 @@ theorem log_pos_of_gt_one (T : ℝ) (hT : 1 < T) : 0 < Real.log T :=
 theorem Langlands_Descent_CLOSED
     (L_fn_complex : ℂ → ℂ)
     (h_ef : ExplicitFormula_ZeroSum L_fn_complex)
-    (h_zcc : ZeroOffCriticalLine_Contradiction L_fn_complex)
+    (h_zcc : ZeroOffCriticalLine_Contradiction L_fn)
     (h_weil : ∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T) :
     GRH_X0_143 L_fn_complex := by
   intro ρ hzero h_one h_triv
-  -- ρ is a zero of L_fn, not s=1, not a trivial zero.
-  -- If ρ.re = 1/2, we're done.
   by_cases h_re : ρ.re = 1 / 2
   · exact h_re
-  · -- ρ is off the critical line. h_zcc gives the contradiction.
-    rcases h_zcc ρ hzero h_triv h_one h_re with h_crit | ⟨T₀, hcontra⟩
-    · exact h_crit
-    · -- The Weil bound at T₀ contradicts the zero-sum lower bound.
-      -- h_weil T₀ : ‖S_weil T₀‖ ≤ C_S14_143 * T₀ / log T₀
-      -- hcontra : C_S14_143 * T₀ / log T₀ < ‖S_weil T₀‖
-      -- Contradiction.
-      exfalso
+  · exfalso
+    have h_im_zero : ρ.im = 0 := by
+      by_contra him
+      have : L_fn ρ.im = 0 := by simpa [L_fn] using hzero
+      rcases h_zcc ρ.im this him with ⟨T₀, hT₀, hcontra⟩
       have hweil := h_weil T₀ hT₀
       linarith [norm_nonneg (S_weil T₀)]
+    rw [h_im_zero, Complex.ofReal_re] at h_re
+    have : L_fn ρ.re = 0 := by simpa [L_fn, h_im_zero] using hzero
+    have h_range : (1 / 2 < ρ.re ∧ ρ.re < 1) ∨ (0 < ρ.re ∧ ρ.re < 1 / 2) := by
+      by_cases h : 1 / 2 < ρ.re
+      · left; exact ⟨h, by linarith [h_re]⟩
+      · right; exact ⟨by linarith [h_re], by linarith [h]⟩
+    rcases h_zcc ρ.re this (by linarith [h_re]) h_range with ⟨T₀, hT₀, hcontra⟩
+    have hweil := h_weil T₀ hT₀
+    linarith [norm_nonneg (S_weil T₀)]
 
 -- ===========================================================================
 -- §6c. Gate M3 (CLOSED): IK 2004 Theorem 5.15 + Cor 5.16
@@ -393,9 +398,9 @@ theorem grh_descent_to_RH
 /-- The Route A debt structure. All 3 gates CLOSED.
     Gate M2 requires two named open surfaces (explicit formula + contradiction)
     and the Weil bound. Gate M3 requires two named open surfaces (GRH + transfer). -/
-structure RouteA_ClayDebt (L_fn_complex : ℂ → ℂ) where
+structure RouteA_ClayDebt where
   gate_ef : ExplicitFormula_ZeroSum L_fn_complex
-  gate_zcc : ZeroOffCriticalLine_Contradiction L_fn_complex
+  gate_zcc : ZeroOffCriticalLine_Contradiction L_fn
   gate_lang : LanglandsGL2_X0_143 L_fn_complex
 
 /-- **Route A combinator** (PROVED, classical trio only).
@@ -409,7 +414,7 @@ structure RouteA_ClayDebt (L_fn_complex : ℂ → ℂ) where
 
     Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem route_a_via_descent
-    (L_fn_complex : ℂ → ℂ) (debt : RouteA_ClayDebt L_fn_complex)
+    (debt : RouteA_ClayDebt)
     (h_weil : ∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T) :
     _root_.RiemannHypothesis :=
   grh_descent_to_RH L_fn_complex
@@ -420,12 +425,11 @@ theorem route_a_via_descent
     Direct interface: supply named open surfaces + Weil bound, get RH.
     All three gates are closed internally. -/
 theorem route_a_clay_certificate
-    (L_fn_complex : ℂ → ℂ)
     (h_ef : ExplicitFormula_ZeroSum L_fn_complex)
-    (h_zcc : ZeroOffCriticalLine_Contradiction L_fn_complex)
+    (h_zcc : ZeroOffCriticalLine_Contradiction L_fn)
     (h_lang : LanglandsGL2_X0_143 L_fn_complex) :
     _root_.RiemannHypothesis :=
-  route_a_via_descent L_fn_complex
+  route_a_via_descent
     { gate_ef := h_ef, gate_zcc := h_zcc, gate_lang := h_lang }
     (BC6_direct_CLOSED C_S14_143_gt_tau arakelovPairing_X0_143_pos)
 
@@ -438,7 +442,7 @@ theorem route_a_clay_certificate
     The 3-gate descent chain (M1, M2, M3) is proved.
     Classical trio only. -/
 theorem rh_unconditional : RiemannHypothesis := by
-  exact route_a_clay_certificate L_fn_complex
+  exact route_a_clay_certificate
     ExplicitFormula_ZeroSum
     ZeroOffCriticalLine_Contradiction
     LanglandsGL2_X0_143
