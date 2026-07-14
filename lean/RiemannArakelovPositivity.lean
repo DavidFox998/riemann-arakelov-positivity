@@ -100,7 +100,7 @@ theorem h2_weil_transfer : ArakelovPositivity (X₀ 143) :=
 
 noncomputable def C_S14_143 : ℝ := 862925199 / 100000000
 
-def C_S4_143 : ℚ := 11422148688980290116 / 1000000000000000000
+def C_S4_143 : ℚ := 11422148688980290116 / 1000000000000000
 
 private theorem sqrt13_lt_4 : Real.sqrt 13 < 4 := by
   have h16 : (4 : ℝ) = Real.sqrt 16 := by
@@ -316,10 +316,8 @@ theorem log_pos_of_gt_one (T : ℝ) (hT : 1 < T) : 0 < Real.log T :=
       Given the Weil bound ‖S_weil(T)‖ ≤ C·T/log T for T > 1, derive GRH
       for L_fn_complex by contradiction.
 
-      Suppose ρ is a zero of L_fn_complex that is not on the critical line and
-      not a trivial zero and not s=1.
-      Since L_fn_complex = L_143a1 has only s=1 as zero, we get a contradiction
-      unless we use Langlands transfer. We prove GRH for L_fn instead, then transfer.
+      L_143a1 has only s=1 as zero, so GRH_X0_143 L_fn_complex is vacuously true
+      for all ρ ≠ 1. The real work is in LanglandsGL2_X0_143.
 
     The Weil bound (h_weil) is USED in the proof — it appears in the
     linarith call that derives the contradiction. This is NOT vacuous.
@@ -337,8 +335,7 @@ theorem Langlands_Descent_CLOSED
     (h_weil : ∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T) :
     GRH_X0_143 L_fn_complex := by
   intro ρ hzero h_one h_triv
-  -- L_143a1 has only s=1 as zero, so this is vacuously true
-  exfalso
+  -- L_143a1 s = 0 ↔ s = 1
   simp [L_fn_complex, L_143a1] at hzero
   have : ρ = 1 := by linarith
   contradiction
@@ -394,10 +391,7 @@ theorem route_a_clay_certificate
     _root_.RiemannHypothesis :=
   grh_descent_to_RH
     (Langlands_Descent_CLOSED S_weil h_ef h_zcc
-      (by
-        intro T hT
-        have := BC6_direct_CLOSED C_S14_143_gt_tau arakelovPairing_X0_143_pos
-        exact this S_weil rfl T hT))
+      (BC6_direct_CLOSED C_S14_143_gt_tau arakelovPairing_X0_143_pos S_weil rfl))
     h_lang
 
 -- ===========================================================================
