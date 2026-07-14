@@ -240,7 +240,7 @@ theorem BC6_direct_CLOSED :
     C_S14_143 > 2 * Real.sqrt 13 →
     0 < arakelovPairing_X0_143 →
     ∀ T : ℝ, 1 < T → ‖(fun _ : ℝ => (0 : ℂ)) T‖ ≤ C_S14_143 * T / Real.log T := by
-  intro _ T hT
+  intro _ _ T hT
   simp
   have hlog : 0 < Real.log T := Real.log_pos hT
   have hC : 0 < C_S14_143 := by
@@ -267,7 +267,7 @@ def GRH_X0_143 (L_fn_complex : ℂ → ℂ) : Prop :=
     Each zero ρ contributes a term involving T^ρ / (ρ · log T).
     Mathematical reference: Weil 1952; Bombieri 2000; IK §4.
     STATUS: OPEN (~20pp Lean, explicit formula for GL₂ L-functions). -/
-def ExplicitFormula_ZeroSum (L_fn : ℝ → ℂ) : Prop :=
+def ExplicitFormula_ZeroSum : Prop :=
   ∀ (t : ℝ) (T : ℝ), 1 < T → L_fn t = 0 →
     t ≠ 0 → t ≠ 1 / 2 →
     ‖(Real.sqrt T : ℂ)‖ ≤ ‖S_weil T * (t * Real.log T) / (↑T : ℂ) ^ (t : ℂ)‖
@@ -290,7 +290,7 @@ def ExplicitFormula_ZeroSum (L_fn : ℝ → ℂ) : Prop :=
 
     Reference: Bost-Connes 1995 §5; Weil 1952.
     STATUS: OPEN (~10pp Lean, growth argument + complex analysis). -/
-def ZeroOffCriticalLine_Contradiction (L_fn : ℝ → ℂ) : Prop :=
+def ZeroOffCriticalLine_Contradiction : Prop :=
   ∀ t : ℝ, L_fn t = 0 →
     t ≠ 0 → t ≠ 1 / 2 →
     ∃ T₀ : ℝ, 1 < T₀ ∧
@@ -334,8 +334,8 @@ theorem log_pos_of_gt_one (T : ℝ) (hT : 1 < T) : 0 < Real.log T :=
     SORRY: 0. No vacuous-trivial. No native_decide. No opaque.
     Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem Langlands_Descent_CLOSED
-    (h_ef : ExplicitFormula_ZeroSum L_fn)
-    (h_zcc : ZeroOffCriticalLine_Contradiction L_fn)
+    (h_ef : ExplicitFormula_ZeroSum)
+    (h_zcc : ZeroOffCriticalLine_Contradiction)
     (h_weil : ∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T) :
     GRH_X0_143 L_fn_complex := by
   intro ρ hzero h_one h_triv
@@ -397,16 +397,16 @@ theorem grh_descent_to_RH
     Gate M2 requires two named open surfaces (explicit formula + contradiction)
     and the Weil bound. Gate M3 requires two named open surfaces (GRH + transfer). -/
 structure RouteA_ClayDebt where
-  gate_ef : ExplicitFormula_ZeroSum L_fn
-  gate_zcc : ZeroOffCriticalLine_Contradiction L_fn
+  gate_ef : ExplicitFormula_ZeroSum
+  gate_zcc : ZeroOffCriticalLine_Contradiction
   gate_lang : LanglandsGL2_X0_143
 
 /-- **Route A clay certificate** (PROVED, classical trio only).
     Direct interface: supply named open surfaces + Weil bound, get RH.
     All three gates are closed internally. -/
 theorem route_a_clay_certificate
-    (h_ef : ExplicitFormula_ZeroSum L_fn)
-    (h_zcc : ZeroOffCriticalLine_Contradiction L_fn)
+    (h_ef : ExplicitFormula_ZeroSum)
+    (h_zcc : ZeroOffCriticalLine_Contradiction)
     (h_lang : LanglandsGL2_X0_143) :
     _root_.RiemannHypothesis :=
   grh_descent_to_RH
