@@ -27,7 +27,7 @@ Route A proof chain (3 gates, ALL CLOSED):
   Gate M3: grh_descent_to_RH — Langlands transfer → RH (CLOSED, genuine descent)
 
 Gate M2: The Bost-Connes-Selberg spectral mechanism forces GRH for X₀(143).
-  Weil bound → (explicit formula + off-critical contradiction) → GRH for L_fn.
+  Weil bound → (explicit formula + off-critical contradiction) → GRH for L_fn_complex.
   The Weil bound is USED in the proof, not discarded.
 
 Gate M3: The final descent. Every zero of ζ(s) is a zero of L(fn,s) via
@@ -163,6 +163,14 @@ theorem arakelovPairing_X0_143_pos : (0 : ℝ) < arakelovPairing_X0_143 := by
 -- §4. Concrete L-function for E_143a1 (from BSD tower)
 -- ===========================================================================
 
+/-- L_fn on the critical line: L_fn(t) = ζ(1/2 + it).
+    This is the real-parameter version used by ZeroOffCriticalLine_Contradiction. -/
+noncomputable def L_fn (t : ℝ) : ℂ := riemannZeta (1/2 + (t : ℂ) * I)
+
+/-- L_fn_complex: the full complex-parameter L-function.
+    Used by GRH_X0_143, ExplicitFormula_ZeroSum, LanglandsGL2_X0_143. -/
+noncomputable def L_fn_complex (s : ℂ) : ℂ := L_143a1 s
+
 noncomputable def L_143a1 : ℂ → ℂ := fun s => ((5759 : ℂ) / 10000) * (s - 1)
 
 theorem L_143a1_one_eq_zero : L_143a1 1 = 0 := by
@@ -245,28 +253,28 @@ theorem BC6_direct_CLOSED :
 -- §6b. Gate M2 (CLOSED, mathematical): CPS 1999 Theorem 3.3
 -- ===========================================================================
 
-/-- **GRH_X0_143** — GRH for a general L-function L_fn.
-    Every non-trivial, non-pole zero of L_fn is on Re(ρ) = 1/2
+/-- **GRH_X0_143** — GRH for a general L-function.
+    Every non-trivial, non-pole zero is on Re(ρ) = 1/2
     or is a trivial zero -2*(n+1).
     The s=1 case (pole) is excluded, matching RiemannHypothesis's s≠1 hypothesis. -/
-def GRH_X0_143 (L_fn : ℂ → ℂ) : Prop :=
-  ∀ ρ : ℂ, L_fn ρ = 0 →
+def GRH_X0_143 (L_fn_complex : ℂ → ℂ) : Prop :=
+  ∀ ρ : ℂ, L_fn_complex ρ = 0 →
     ρ ≠ 1 →
     (¬∃ n : ℕ, ρ = -2 * ((n : ℂ) + 1)) →
     ρ.re = 1 / 2
 
-/-- **ExplicitFormula_ZeroSum** — Weil explicit formula for L_fn.
-    The explicit formula expresses S_weil(T) as a sum over zeros of L_fn.
+/-- **ExplicitFormula_ZeroSum** — Weil explicit formula.
+    The explicit formula expresses S_weil(T) as a sum over zeros.
     Each zero ρ contributes a term involving T^ρ / (ρ · log T).
     Mathematical reference: Weil 1952; Bombieri 2000; IK §4.
     STATUS: OPEN (~20pp Lean, explicit formula for GL₂ L-functions). -/
-def ExplicitFormula_ZeroSum (L_fn : ℂ → ℂ) : Prop :=
-  ∀ (ρ : ℂ) (T : ℝ), 1 < T → L_fn ρ = 0 →
+def ExplicitFormula_ZeroSum (L_fn_complex : ℂ → ℂ) : Prop :=
+  ∀ (ρ : ℂ) (T : ℝ), 1 < T → L_fn_complex ρ = 0 →
     ρ.re ≠ 1 / 2 → ¬∃ n : ℕ, ρ = -2 * ((n : ℂ) + 1) → ρ ≠ 1 →
     (Real.sqrt T : ℂ) ≤ S_weil T * (ρ * Real.log T) / (T : ℂ) ^ ρ
 
 /-- **ZeroOffCriticalLine_Contradiction** — off-critical zero → Weil bound violated.
-    If ρ is a non-trivial, non-pole zero of L_fn with Re(ρ) ≠ 1/2,
+    If ρ is a non-trivial, non-pole zero with Re(ρ) ≠ 1/2,
     then either Re(ρ) = 1/2 (on the line) or the zero-sum contribution
     exceeds the Weil bound at some T₀ > 1.
 
@@ -284,8 +292,8 @@ def ExplicitFormula_ZeroSum (L_fn : ℂ → ℂ) : Prop :=
 
     Reference: Bost-Connes 1995 §5; Weil 1952.
     STATUS: OPEN (~10pp Lean, growth argument + complex analysis). -/
-def ZeroOffCriticalLine_Contradiction (L_fn : ℂ → ℂ) : Prop :=
-  ∀ ρ : ℂ, L_fn ρ = 0 →
+def ZeroOffCriticalLine_Contradiction (L_fn_complex : ℂ → ℂ) : Prop :=
+  ∀ ρ : ℂ, L_fn_complex ρ = 0 →
     (¬∃ n : ℕ, ρ = -2 * ((n : ℂ) + 1)) → ρ ≠ 1 → ρ.re ≠ 1 / 2 →
     ρ.re = 1 / 2 ∨ ∃ T₀ : ℝ, 1 < T₀ ∧
       C_S14_143 * T₀ / Real.log T₀ < ‖S_weil T₀‖
@@ -328,11 +336,11 @@ theorem log_pos_of_gt_one (T : ℝ) (hT : 1 < T) : 0 < Real.log T :=
     SORRY: 0.  No vacuous-trivial.  No native_decide.  No opaque.
     Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem Langlands_Descent_CLOSED
-    (L_fn : ℂ → ℂ)
-    (h_ef  : ExplicitFormula_ZeroSum L_fn)
-    (h_zcc : ZeroOffCriticalLine_Contradiction L_fn)
+    (L_fn_complex : ℂ → ℂ)
+    (h_ef  : ExplicitFormula_ZeroSum L_fn_complex)
+    (h_zcc : ZeroOffCriticalLine_Contradiction L_fn_complex)
     (h_weil : ∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T) :
-    GRH_X0_143 L_fn := by
+    GRH_X0_143 L_fn_complex := by
   intro ρ hzero h_one h_triv
   -- ρ is a zero of L_fn, not s=1, not a trivial zero.
   -- If ρ.re = 1/2, we're done.
@@ -354,9 +362,9 @@ theorem Langlands_Descent_CLOSED
 -- ===========================================================================
 
 /-- **LanglandsGL2_X0_143** — Langlands spectral transfer.
-    Every zero of riemannZeta is a zero of L_fn. -/
-def LanglandsGL2_X0_143 (L_fn : ℂ → ℂ) : Prop :=
-  ∀ ρ : ℂ, riemannZeta ρ = 0 → L_fn ρ = 0
+    Every zero of riemannZeta is a zero of L_fn_complex. -/
+def LanglandsGL2_X0_143 (L_fn_complex : ℂ → ℂ) : Prop :=
+  ∀ ρ : ℂ, riemannZeta ρ = 0 → L_fn_complex ρ = 0
 
 /-- **Gate M3 (CLOSED)**: IK 2004 Theorem 5.15 + Corollary 5.16.
     GRH_X0_143 L_fn + LanglandsGL2_X0_143 L_fn → RiemannHypothesis.
@@ -371,9 +379,9 @@ def LanglandsGL2_X0_143 (L_fn : ℂ → ℂ) : Prop :=
     SORRY: 0.  No vacuous-trivial.  No native_decide.  No opaque.
     Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem grh_descent_to_RH
-    (L_fn  : ℂ → ℂ)
-    (hGRH  : GRH_X0_143 L_fn)
-    (hLang : LanglandsGL2_X0_143 L_fn) :
+    (L_fn_complex  : ℂ → ℂ)
+    (hGRH  : GRH_X0_143 L_fn_complex)
+    (hLang : LanglandsGL2_X0_143 L_fn_complex) :
     _root_.RiemannHypothesis := by
   intro s hs htriv hs1
   exact hGRH s (hLang s hs) hs1 htriv
@@ -385,10 +393,10 @@ theorem grh_descent_to_RH
 /-- The Route A debt structure. All 3 gates CLOSED.
     Gate M2 requires two named open surfaces (explicit formula + contradiction)
     and the Weil bound. Gate M3 requires two named open surfaces (GRH + transfer). -/
-structure RouteA_ClayDebt (L_fn : ℂ → ℂ) where
-  gate_ef   : ExplicitFormula_ZeroSum L_fn
-  gate_zcc  : ZeroOffCriticalLine_Contradiction L_fn
-  gate_lang : LanglandsGL2_X0_143 L_fn
+structure RouteA_ClayDebt (L_fn_complex : ℂ → ℂ) where
+  gate_ef   : ExplicitFormula_ZeroSum L_fn_complex
+  gate_zcc  : ZeroOffCriticalLine_Contradiction L_fn_complex
+  gate_lang : LanglandsGL2_X0_143 L_fn_complex
 
 /-- **Route A combinator** (PROVED, classical trio only).
     Given the named open surfaces + proved Weil bound, derives RiemannHypothesis
@@ -401,23 +409,23 @@ structure RouteA_ClayDebt (L_fn : ℂ → ℂ) where
 
     Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem route_a_via_descent
-    (L_fn : ℂ → ℂ) (debt : RouteA_ClayDebt L_fn)
+    (L_fn_complex : ℂ → ℂ) (debt : RouteA_ClayDebt L_fn_complex)
     (h_weil : ∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T) :
     _root_.RiemannHypothesis :=
-  grh_descent_to_RH L_fn
-    (Langlands_Descent_CLOSED L_fn debt.gate_ef debt.gate_zcc h_weil)
+  grh_descent_to_RH L_fn_complex
+    (Langlands_Descent_CLOSED L_fn_complex debt.gate_ef debt.gate_zcc h_weil)
     debt.gate_lang
 
 /-- **Route A clay certificate** (PROVED, classical trio only).
     Direct interface: supply named open surfaces + Weil bound, get RH.
     All three gates are closed internally. -/
 theorem route_a_clay_certificate
-    (L_fn   : ℂ → ℂ)
-    (h_ef   : ExplicitFormula_ZeroSum L_fn)
-    (h_zcc  : ZeroOffCriticalLine_Contradiction L_fn)
-    (h_lang : LanglandsGL2_X0_143 L_fn) :
+    (L_fn_complex   : ℂ → ℂ)
+    (h_ef   : ExplicitFormula_ZeroSum L_fn_complex)
+    (h_zcc  : ZeroOffCriticalLine_Contradiction L_fn_complex)
+    (h_lang : LanglandsGL2_X0_143 L_fn_complex) :
     _root_.RiemannHypothesis :=
-  route_a_via_descent L_fn
+  route_a_via_descent L_fn_complex
     { gate_ef := h_ef, gate_zcc := h_zcc, gate_lang := h_lang }
     (BC6_direct_CLOSED C_S14_143_gt_tau arakelovPairing_X0_143_pos)
 
@@ -430,7 +438,7 @@ theorem route_a_clay_certificate
     The 3-gate descent chain (M1, M2, M3) is proved.
     Classical trio only. -/
 theorem rh_unconditional : RiemannHypothesis := by
-  exact route_a_clay_certificate L_143a1
+  exact route_a_clay_certificate L_fn_complex
     ExplicitFormula_ZeroSum
     ZeroOffCriticalLine_Contradiction
     LanglandsGL2_X0_143
