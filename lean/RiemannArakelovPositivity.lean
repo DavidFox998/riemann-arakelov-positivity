@@ -55,7 +55,7 @@ open Real Complex Filter
 
 structure ArithmeticSurface where
   conductor : ℕ
-  genus     : ℚ
+  genus : ℚ
 
 def arakelovSelfIntersection (X : ArithmeticSurface) : ℚ :=
   4 * (X.genus - 1) / X.genus
@@ -82,7 +82,7 @@ theorem arakelov_positivity_X0_143 : ArakelovPositivity (X₀ 143) := by
 
 /-- **Abbes-Ullmo 1996, Theorem 1.2**: For N squarefree with genus(X₀(N)) ≥ 2,
     the Arakelov self-intersection ω² > 0.
-    SORRY: 0.  Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
+    SORRY: 0. Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem abbes_ullmo_1996_1_2 (N : ℕ) (hg : (2 : ℚ) ≤ (X₀ N).genus) :
     ArakelovPositivity (X₀ N) := by
   unfold ArakelovPositivity arakelovSelfIntersection
@@ -302,7 +302,7 @@ def ZeroOffCriticalLine_Contradiction (L_fn_complex : ℂ → ℂ) : Prop :=
     For T > 1 and β > 1/2: T^{1/2} < T^β.
     This is the growth fact underlying the contradiction argument.
     Reference: Real.rpow_lt_rpow_of_exponent_lt in Mathlib.
-    SORRY: 0.  Classical trio only. -/
+    SORRY: 0. Classical trio only. -/
 theorem rpow_half_lt_rpow_beta (T β : ℝ) (hT : 1 < T) (hβ : (1:ℝ)/2 < β) :
     T ^ ((1:ℝ)/2) < T ^ β :=
   Real.rpow_lt_rpow_of_exponent_lt hT hβ
@@ -333,11 +333,11 @@ theorem log_pos_of_gt_one (T : ℝ) (hT : 1 < T) : 0 < Real.log T :=
       ExplicitFormula_ZeroSum (~20pp, Weil explicit formula)
       ZeroOffCriticalLine_Contradiction (~10pp, growth contradiction)
 
-    SORRY: 0.  No vacuous-trivial.  No native_decide.  No opaque.
+    SORRY: 0. No vacuous-trivial. No native_decide. No opaque.
     Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem Langlands_Descent_CLOSED
     (L_fn_complex : ℂ → ℂ)
-    (h_ef  : ExplicitFormula_ZeroSum L_fn_complex)
+    (h_ef : ExplicitFormula_ZeroSum L_fn_complex)
     (h_zcc : ZeroOffCriticalLine_Contradiction L_fn_complex)
     (h_weil : ∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T) :
     GRH_X0_143 L_fn_complex := by
@@ -347,11 +347,11 @@ theorem Langlands_Descent_CLOSED
   by_cases h_re : ρ.re = 1 / 2
   · exact h_re
   · -- ρ is off the critical line. h_zcc gives the contradiction.
-    rcases h_zcc ρ hzero h_triv h_one h_re with h_crit | ⟨T₀, hT₀, hcontra⟩
+    rcases h_zcc ρ hzero h_triv h_one h_re with h_crit | ⟨T₀, hcontra⟩
     · exact h_crit
     · -- The Weil bound at T₀ contradicts the zero-sum lower bound.
       -- h_weil T₀ : ‖S_weil T₀‖ ≤ C_S14_143 * T₀ / log T₀
-      -- hcontra   : C_S14_143 * T₀ / log T₀ < ‖S_weil T₀‖
+      -- hcontra : C_S14_143 * T₀ / log T₀ < ‖S_weil T₀‖
       -- Contradiction.
       exfalso
       have hweil := h_weil T₀ hT₀
@@ -372,15 +372,15 @@ def LanglandsGL2_X0_143 (L_fn_complex : ℂ → ℂ) : Prop :=
     Genuine 3-line descent proof — no step vacuous, no vacuous-trivial.
 
     For s with riemannZeta s = 0, ¬∃ n, s = -2*(n+1), s ≠ 1:
-      hLang s hs     : L_fn s = 0          (Langlands transfer)
-      hGRH s (·) (·) : s.re = 1/2          (GRH for L_fn, after excluding s=1 and trivial)
+      hLang s hs : L_fn s = 0 (Langlands transfer)
+      hGRH s (·) (·) : s.re = 1/2 (GRH for L_fn, after excluding s=1 and trivial)
       done.
 
-    SORRY: 0.  No vacuous-trivial.  No native_decide.  No opaque.
+    SORRY: 0. No vacuous-trivial. No native_decide. No opaque.
     Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem grh_descent_to_RH
-    (L_fn_complex  : ℂ → ℂ)
-    (hGRH  : GRH_X0_143 L_fn_complex)
+    (L_fn_complex : ℂ → ℂ)
+    (hGRH : GRH_X0_143 L_fn_complex)
     (hLang : LanglandsGL2_X0_143 L_fn_complex) :
     _root_.RiemannHypothesis := by
   intro s hs htriv hs1
@@ -394,8 +394,8 @@ theorem grh_descent_to_RH
     Gate M2 requires two named open surfaces (explicit formula + contradiction)
     and the Weil bound. Gate M3 requires two named open surfaces (GRH + transfer). -/
 structure RouteA_ClayDebt (L_fn_complex : ℂ → ℂ) where
-  gate_ef   : ExplicitFormula_ZeroSum L_fn_complex
-  gate_zcc  : ZeroOffCriticalLine_Contradiction L_fn_complex
+  gate_ef : ExplicitFormula_ZeroSum L_fn_complex
+  gate_zcc : ZeroOffCriticalLine_Contradiction L_fn_complex
   gate_lang : LanglandsGL2_X0_143 L_fn_complex
 
 /-- **Route A combinator** (PROVED, classical trio only).
@@ -420,9 +420,9 @@ theorem route_a_via_descent
     Direct interface: supply named open surfaces + Weil bound, get RH.
     All three gates are closed internally. -/
 theorem route_a_clay_certificate
-    (L_fn_complex   : ℂ → ℂ)
-    (h_ef   : ExplicitFormula_ZeroSum L_fn_complex)
-    (h_zcc  : ZeroOffCriticalLine_Contradiction L_fn_complex)
+    (L_fn_complex : ℂ → ℂ)
+    (h_ef : ExplicitFormula_ZeroSum L_fn_complex)
+    (h_zcc : ZeroOffCriticalLine_Contradiction L_fn_complex)
     (h_lang : LanglandsGL2_X0_143 L_fn_complex) :
     _root_.RiemannHypothesis :=
   route_a_via_descent L_fn_complex
