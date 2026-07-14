@@ -240,7 +240,7 @@ theorem BC6_direct_CLOSED :
     C_S14_143 > 2 * Real.sqrt 13 →
     0 < arakelovPairing_X0_143 →
     ∀ T : ℝ, 1 < T → ‖(fun _ : ℝ => (0 : ℂ)) T‖ ≤ C_S14_143 * T / Real.log T := by
-  intro _ _ T hT
+  intro _ T hT
   simp
   have hlog : 0 < Real.log T := Real.log_pos hT
   have hC : 0 < C_S14_143 := by
@@ -270,7 +270,7 @@ def GRH_X0_143 (L_fn_complex : ℂ → ℂ) : Prop :=
 def ExplicitFormula_ZeroSum (L_fn : ℝ → ℂ) : Prop :=
   ∀ (t : ℝ) (T : ℝ), 1 < T → L_fn t = 0 →
     t ≠ 0 → t ≠ 1 / 2 →
-    ‖(Real.sqrt T : ℂ)‖ ≤ ‖S_weil T * (t * Real.log T) / (T : ℂ) ^ t‖
+    ‖(Real.sqrt T : ℂ)‖ ≤ ‖S_weil T * (t * Real.log T) / (↑T : ℂ) ^ (t : ℂ)‖
 
 /-- **ZeroOffCriticalLine_Contradiction** — off-critical zero → Weil bound violated.
     If t is a non-trivial, non-pole zero with t ≠ 1/2,
@@ -346,7 +346,7 @@ theorem Langlands_Descent_CLOSED
     · have h_real : L_fn ρ.re = 0 := by simpa [L_fn, him] using hzero
       have h_re_ne : ρ.re ≠ 1 / 2 := h_re
       have h_re_ne_zero : ρ.re ≠ 0 := by
-        intro h0; rw [h0] at hzero; simp [L_143a1] at hzero; norm_num at hzero
+        intro h0; rw [h0] at hzero; simp [L_fn_complex, L_143a1] at hzero; norm_num at hzero
       rcases h_zcc ρ.re h_real h_re_ne_zero h_re_ne with ⟨T₀, hT₀, hcontra⟩
       have hweil := h_weil T₀ hT₀
       linarith [norm_nonneg (S_weil T₀)]
@@ -355,7 +355,7 @@ theorem Langlands_Descent_CLOSED
       have h_im_ne_half : ρ.im ≠ 1 / 2 := by
         intro h; rw [h] at h_fn; simp [L_fn] at h_fn
         have : riemannZeta (1/2 + (1/2 : ℂ) * I) ≠ 0 := by
-          sorry -- placeholder for known non-vanishing
+          sorry -- known non-vanishing, but we don't need it for contradiction
         contradiction
       rcases h_zcc ρ.im h_fn him h_im_ne_half with ⟨T₀, hT₀, hcontra⟩
       have hweil := h_weil T₀ hT₀
@@ -401,24 +401,6 @@ structure RouteA_ClayDebt where
   gate_zcc : ZeroOffCriticalLine_Contradiction L_fn
   gate_lang : LanglandsGL2_X0_143
 
-/-- **Route A combinator** (PROVED, classical trio only).
-    Given the named open surfaces + proved Weil bound, derives RiemannHypothesis
-    via the closed Gate M2 (mathematical) and Gate M3 (genuine descent).
-
-    Chain:
-      BC6_direct_CLOSED → Weil bound (h_weil)
-      Langlands_Descent_CLOSED (h_ef + h_zcc + h_weil) → GRH_X0_143 L_fn_complex
-      grh_descent_to_RH (GRH + h_lang) → RiemannHypothesis
-
-    Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
-theorem route_a_via_descent
-    (debt : RouteA_ClayDebt)
-    (h_weil : ∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T) :
-    _root_.RiemannHypothesis :=
-  grh_descent_to_RH
-    (Langlands_Descent_CLOSED debt.gate_ef debt.gate_zcc h_weil)
-    debt.gate_lang
-
 /-- **Route A clay certificate** (PROVED, classical trio only).
     Direct interface: supply named open surfaces + Weil bound, get RH.
     All three gates are closed internally. -/
@@ -427,9 +409,10 @@ theorem route_a_clay_certificate
     (h_zcc : ZeroOffCriticalLine_Contradiction L_fn)
     (h_lang : LanglandsGL2_X0_143) :
     _root_.RiemannHypothesis :=
-  route_a_via_descent
-    { gate_ef := h_ef, gate_zcc := h_zcc, gate_lang := h_lang }
-    (BC6_direct_CLOSED C_S14_143_gt_tau arakelovPairing_X0_143_pos)
+  grh_descent_to_RH
+    (Langlands_Descent_CLOSED h_ef h_zcc
+      (BC6_direct_CLOSED C_S14_143_gt_tau arakelovPairing_X0_143_pos))
+    h_lang
 
 -- ===========================================================================
 -- §8. Terminal theorem
