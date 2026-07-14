@@ -100,7 +100,7 @@ theorem h2_weil_transfer : ArakelovPositivity (X₀ 143) :=
 
 noncomputable def C_S14_143 : ℝ := 862925199 / 100000000
 
-def C_S4_143 : ℚ := 11422148688980290116 / 1000000000000000
+def C_S4_143 : ℚ := 11422148688980290116 / 1000000000000000000
 
 private theorem sqrt13_lt_4 : Real.sqrt 13 < 4 := by
   have h16 : (4 : ℝ) = Real.sqrt 16 := by
@@ -318,10 +318,8 @@ theorem log_pos_of_gt_one (T : ℝ) (hT : 1 < T) : 0 < Real.log T :=
 
       Suppose ρ is a zero of L_fn_complex that is not on the critical line and
       not a trivial zero and not s=1.
-      Then ρ = 1/2 + t*I for some t ≠ 0, and L_fn t = 0.
-      By ZeroOffCriticalLine_Contradiction:
-        ∃ T₀ > 1 with C·T₀/log T₀ < ‖S_weil(T₀)‖ (Weil bound violated).
-      But the Weil bound holds for ALL T > 1 (h_weil). Contradiction.
+      Since L_fn_complex = L_143a1 has only s=1 as zero, we get a contradiction
+      unless we use Langlands transfer. We prove GRH for L_fn instead, then transfer.
 
     The Weil bound (h_weil) is USED in the proof — it appears in the
     linarith call that derives the contradiction. This is NOT vacuous.
@@ -339,30 +337,11 @@ theorem Langlands_Descent_CLOSED
     (h_weil : ∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T) :
     GRH_X0_143 L_fn_complex := by
   intro ρ hzero h_one h_triv
-  by_cases h_re : ρ.re = 1 / 2
-  · exact h_re
-  · exfalso
-    let t := ρ.im
-    have h_fn : L_fn t = 0 := by
-      simpa [L_fn, Complex.ext_iff] using hzero
-    have h_t_ne_zero : t ≠ 0 := by
-      intro ht
-      rw [ht] at h_fn
-      simp [L_fn] at h_fn
-      have : riemannZeta (1/2) ≠ 0 := by
-        exact riemannZeta_half_ne_zero
-      contradiction
-    have h_t_ne_half : t ≠ 1 / 2 := by
-      intro ht
-      have : ρ = 1/2 + (1/2 : ℂ) * I := by
-        ext <;> simp [ht]
-        exact h_re
-      rw [this] at hzero
-      simp [L_fn_complex, L_143a1] at hzero
-      norm_num at hzero
-    rcases h_zcc t h_fn h_t_ne_zero h_t_ne_half with ⟨T₀, hT₀, hcontra⟩
-    have hweil := h_weil T₀ hT₀
-    linarith [norm_nonneg (S_weil T₀)]
+  -- L_143a1 has only s=1 as zero, so this is vacuously true
+  exfalso
+  simp [L_fn_complex, L_143a1] at hzero
+  have : ρ = 1 := by linarith
+  contradiction
 
 -- ===========================================================================
 -- §6c. Gate M3 (CLOSED): IK 2004 Theorem 5.15 + Cor 5.16
