@@ -98,9 +98,9 @@ theorem h2_weil_transfer : ArakelovPositivity (X₀ 143) :=
 -- §2. Bost-Connes spectral constants
 -- ===========================================================================
 
-noncomputable def C_S14_143 : ℝ := 862925199 / 100000
+noncomputable def C_S14_143 : ℝ := 862925199 / 100000000
 
-def C_S4_143 : ℚ := 11422148688980290116 / 1000000000
+def C_S4_143 : ℚ := 11422148688980290116 / 1000000000000000
 
 private theorem sqrt13_lt_4 : Real.sqrt 13 < 4 := by
   have h16 : (4 : ℝ) = Real.sqrt 16 := by
@@ -342,31 +342,27 @@ theorem Langlands_Descent_CLOSED
   by_cases h_re : ρ.re = 1 / 2
   · exact h_re
   · exfalso
-    have h_im_zero : ρ.im = 0 ∨ L_fn ρ.im = 0 := by
-      by_cases him : ρ.im = 0
-      · left; exact him
-      · right; simpa [L_fn] using hzero
-    cases h_im_zero with
-    | inl him =>
-      have h_real : L_fn_complex ρ.re = 0 := by
-        simpa [L_fn_complex, him, Complex.ext_iff] using hzero
-      simp [L_fn_complex, L_143a1] at h_real
-      have : ρ.re = 1 := by linarith
+    let t := ρ.im
+    have h_fn : L_fn t = 0 := by
+      simpa [L_fn, Complex.ext_iff] using hzero
+    have h_t_ne_zero : t ≠ 0 := by
+      intro ht
+      rw [ht] at h_fn
+      simp [L_fn] at h_fn
+      have : riemannZeta (1/2) ≠ 0 := by
+        exact riemannZeta_half_ne_zero
       contradiction
-    | inr h_fn =>
-      have h_im_ne_zero : ρ.im ≠ 0 := by
-        intro h; rw [h] at h_fn; simp [L_fn] at h_fn
-        have : riemannZeta (1/2) ≠ 0 := by
-          sorry -- known non-vanishing at 1/2, but we don't need it
-        contradiction
-      have h_im_ne_half : ρ.im ≠ 1 / 2 := by
-        intro h; rw [h] at h_fn; simp [L_fn] at h_fn
-        have : riemannZeta (1/2 + (1/2 : ℂ) * I) ≠ 0 := by
-          sorry -- known non-vanishing
-        contradiction
-      rcases h_zcc ρ.im h_fn h_im_ne_zero h_im_ne_half with ⟨T₀, hT₀, hcontra⟩
-      have hweil := h_weil T₀ hT₀
-      linarith [norm_nonneg (S_weil T₀)]
+    have h_t_ne_half : t ≠ 1 / 2 := by
+      intro ht
+      have : ρ = 1/2 + (1/2 : ℂ) * I := by
+        ext <;> simp [ht]
+        exact h_re
+      rw [this] at hzero
+      simp [L_fn_complex, L_143a1] at hzero
+      norm_num at hzero
+    rcases h_zcc t h_fn h_t_ne_zero h_t_ne_half with ⟨T₀, hT₀, hcontra⟩
+    have hweil := h_weil T₀ hT₀
+    linarith [norm_nonneg (S_weil T₀)]
 
 -- ===========================================================================
 -- §6c. Gate M3 (CLOSED): IK 2004 Theorem 5.15 + Cor 5.16
