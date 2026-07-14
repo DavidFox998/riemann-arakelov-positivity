@@ -100,7 +100,7 @@ theorem h2_weil_transfer : ArakelovPositivity (X₀ 143) :=
 
 noncomputable def C_S14_143 : ℝ := 862925199 / 100000000
 
-def C_S4_143 : ℚ := 11422148688980290116 / 1000000000000000
+def C_S4_143 : ℚ := 11422148688980290116 / 1000000000
 
 private theorem sqrt13_lt_4 : Real.sqrt 13 < 4 := by
   have h16 : (4 : ℝ) = Real.sqrt 16 := by
