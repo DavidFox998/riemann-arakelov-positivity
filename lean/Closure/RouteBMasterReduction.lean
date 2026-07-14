@@ -14,7 +14,7 @@
   This file states the MASTER REDUCTION:
     Given all Batch 17-25 sub-opens, RiemannHypothesis follows.
 
-  KEY RESULT: NhdsWithin_Re_NeBot_Surface is PROVED (Batch25Closures.lean).
+  KEY RESULT: NhdsWithin_Re_NeBot_OPEN is PROVED (Batch25Closures.lean).
   All other sub-opens are named gaps of 2-10pp each.
 
   SORRY: 0.  No native_decide.  No opaque.  Classical trio only.
@@ -22,6 +22,22 @@
   =====================================================================
 -/
 
+import ArakelovRH.SubClosure.AtomicClosure
+import ArakelovRH.SubClosure.BC6GateAttack
+import ArakelovRH.SubClosure.FEGateAttack
+import ArakelovRH.SubClosure.EulerProductAttack
+import ArakelovRH.SubClosure.ConverseCPSAttack
+import ArakelovRH.SubClosure.WeilGateAttack
+import ArakelovRH.SubClosure.BSVerticalAttack
+import ArakelovRH.SubClosure.RSIdentityFullAttack
+import ArakelovRH.SubClosure.IKGateAttack
+import ArakelovRH.SubClosure.ZFRGateAttack
+import ArakelovRH.SubClosure.WallCRouteAttack
+import ArakelovRH.SubClosure.PhragmenLindelofAttack
+import ArakelovRH.SubClosure.AnalyticExtensionAttack
+import ArakelovRH.SubClosure.IKResidueAttack
+import ArakelovRH.SubClosure.RSIdentityAttack
+import ArakelovRH.SubClosure.Batch25Closures
 
 namespace ArakelovRH.RouteBMasterReduction
 
@@ -41,7 +57,7 @@ open Complex Real
     This is the complete Route B proof skeleton.
     Every named open is a concrete Lean Prop with a known mathematical source
     and page-count estimate for the Lean formalization.
-    NhdsWithin_Re_NeBot_Surface is PROVED (1pp, Batch 25).
+    NhdsWithin_Re_NeBot_OPEN is PROVED (1pp, Batch 25).
 
     SORRY: 0.  Classical trio: {propext, Classical.choice, Quot.sound}. -/
 theorem route_b_master_reduction
@@ -54,28 +70,28 @@ theorem route_b_master_reduction
     (RankinSelberg_L    : C -> C)
     (L_sym2_143         : C -> C)
     -- BC6 sub-opens
-    (h_bc6_sm  : BC6_SelbergMatch_Surface S_weil S_spectral)
-    (h_bc6_sp  : BC6_SpectralBC95_Surface S_spectral arakelov_pairing)
+    (h_bc6_sm  : BC6_SelbergMatch_OPEN S_weil S_spectral)
+    (h_bc6_sp  : BC6_SpectralBC95_OPEN S_spectral arakelov_pairing)
     -- Gate M2 sub-opens
-    (h_fe_rn   : FE_CompletedFunctionalEq_Surface DirichChar_143 twistedL_143a1)
-    (h_ep_ram  : EP_RamanujanBound_Surface L_143a1)
-    (h_ep_pnz  : EP_ProductNonzero_Surface L_143a1)
-    (h_bs_pl   : BS_PhragmenLindelof_Surface DirichChar_143 twistedL_143a1)
-    (h_bs_vt   : BS_VerticalBoundary_Surface DirichChar_143 twistedL_143a1)
-    (h_cu_cp   : CU_ConverseHalfPlane_Surface DirichChar_143 newform_143a1_L twistedL_143a1 L_143a1)
-    (h_cu_ext  : CU_ExtendToAllC_Surface newform_143a1_L L_143a1)
-    (h_ef      : ExplicitFormula_AtomicGap_Surface L_143a1 S_weil)
-    (h_wg      : WG_ZeroDensity_Surface newform_143a1_L L_143a1)
+    (h_fe_rn   : FE_CompletedFunctionalEq_OPEN DirichChar_143 twistedL_143a1)
+    (h_ep_ram  : EP_RamanujanBound_OPEN L_143a1)
+    (h_ep_pnz  : EP_ProductNonzero_OPEN L_143a1)
+    (h_bs_pl   : BS_PhragmenLindelof_OPEN DirichChar_143 twistedL_143a1)
+    (h_bs_vt   : BS_VerticalBoundary_OPEN DirichChar_143 twistedL_143a1)
+    (h_cu_cp   : CU_ConverseHalfPlane_OPEN DirichChar_143 newform_143a1_L twistedL_143a1 L_143a1)
+    (h_cu_ext  : CU_ExtendToAllC_OPEN newform_143a1_L L_143a1)
+    (h_ef      : ExplicitFormula_AtomicGap_OPEN L_143a1 S_weil)
+    (h_wg      : WG_ZeroDensity_OPEN newform_143a1_L L_143a1)
     -- Gate M3 sub-opens
-    (h_rs_id   : RS_EulerFactorIdentity_Surface RankinSelberg_L L_sym2_143)
-    (h_ik_sp   : IK_RS_SimplePole_Surface RankinSelberg_L L_sym2_143)
-    (h_ik_gnv  : IK_GRH_to_L_sym2_nv_Surface RankinSelberg_L L_sym2_143)
-    (h_ik_lk   : IK_RS_L143_Link_Surface RankinSelberg_L L_sym2_143 L_143a1)
-    (h_zfr_dv  : ZFR_DelaValleePoussin_Surface L_143a1)
-    (h_zfr_rh  : ZFR_RHFromWeilZeroFree_Surface L_143a1)
+    (h_rs_id   : RS_EulerFactorIdentity_OPEN RankinSelberg_L L_sym2_143)
+    (h_ik_sp   : IK_RS_SimplePole_OPEN RankinSelberg_L L_sym2_143)
+    (h_ik_gnv  : IK_GRH_to_L_sym2_nv_OPEN RankinSelberg_L L_sym2_143)
+    (h_ik_lk   : IK_RS_L143_Link_OPEN RankinSelberg_L L_sym2_143 L_143a1)
+    (h_zfr_dv  : ZFR_DelaValleePoussin_OPEN L_143a1)
+    (h_zfr_rh  : ZFR_RHFromWeilZeroFree_OPEN L_143a1)
     -- Wall C sub-opens
-    (h_stir_b  : Stirling_Binet_Surface)
-    (h_stir_r  : forall sl sh, Stirling_Remainder_Surface sl sh)
+    (h_stir_b  : Stirling_Binet_OPEN)
+    (h_stir_r  : forall sl sh, Stirling_Remainder_OPEN sl sh)
     : _root_.RiemannHypothesis :=
   rh_from_all_atomic_surfaces
     S_weil S_spectral arakelov_pairing

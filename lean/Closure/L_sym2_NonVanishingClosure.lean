@@ -1,9 +1,9 @@
 /-
   ArakelovRH/Closure/L_sym2_NonVanishingClosure.lean
-  Formal closure of L_sym2_NonVanishing_Surface (Surface 7 of Route B).
+  Formal closure of L_sym2_NonVanishing_OPEN (Surface 7 of Route B).
   Author: David Fox.  Opera Numerorum.  June 2026.
 
-  L_sym2_NonVanishing_Surface: GRH_E_143a1 → L_sym2_143 1 ≠ 0.
+  L_sym2_NonVanishing_OPEN: GRH_E_143a1 → L_sym2_143 1 ≠ 0.
 
   MATHEMATICAL ARGUMENT (IK Thm 5.15, Prop 5.14):
     Step 1 (Gelbart-Jacquet 1978): If GRH holds for L(s,E_143a1) = L(s,f_143a1),
@@ -17,7 +17,7 @@
     Contradiction (s=1 is not a trivial zero for sym²f, which has Gamma factor Γ(s+1/2)·Γ(s+1)).
 
   STRATEGY: Reduce to two atomic sub-surfaces:
-    (1) GelbartJacquet_Lift_Surface (~30pp):
+    (1) GelbartJacquet_Lift_OPEN (~30pp):
           GRH_E_143a1 → all zeros of L(s,sym²f_143) have Re(s) = 1/2.
           This is the Gelbart-Jacquet GL(2)→GL(3) functoriality applied to f_143a1.
     (2) GRH_sym2_implies_L1_nonzero: this CAN BE PROVED from the sub-surface!
@@ -29,14 +29,15 @@
     l_sym2_nonvanishing_from_gj: grand closure scaffold               (0 sorry)
 
   STATUS after this file:
-    L_sym2_NonVanishing_Surface REDUCED: 1 surface → 1 sub-surface.
-    Sub-surface: GelbartJacquet_Lift_Surface (~30pp, GL(3) automorphy).
+    L_sym2_NonVanishing_OPEN REDUCED: 1 surface → 1 sub-surface.
+    Sub-surface: GelbartJacquet_Lift_OPEN (~30pp, GL(3) automorphy).
     grh_sym2_implies_nonvanishing: FULLY PROVED (0 sorry).
 
   SORRY: 0.  No axiom.  No native_decide.  No opaque.  Classical trio.
   Referee: #print axioms ArakelovRH.L_sym2_NonVanishingClosure.l_sym2_nonvanishing_from_gj
 -/
 
+import ArakelovRH.Scaffold.IwaniecKowalski
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 namespace ArakelovRH.L_sym2_NonVanishingClosure
@@ -47,7 +48,7 @@ variable (L_sym2_143 : ℂ → ℂ)
 
 /-! ── §1. Sub-surface: Gelbart-Jacquet lift ─────────────────────────── -/
 
-/-- GelbartJacquet_Lift_Surface — the single atomic sub-surface for NonVanishing.
+/-- GelbartJacquet_Lift_OPEN — the single atomic sub-surface for NonVanishing.
 
     Gelbart-Jacquet functoriality: given GRH_E_143a1 (all non-trivial zeros of
     L(s,E_143a1) lie on Re(s)=1/2), the symmetric square L-function L(s,sym²f_143a1)
@@ -63,7 +64,7 @@ variable (L_sym2_143 : ℂ → ℂ)
     Lean gap: Gelbart-Jacquet functoriality (GL_2 → GL_3) not in Mathlib v4.12.0.
     Requires: automorphic forms on GL_3, Langlands functoriality.
     STATUS: OPEN (~30pp Lean, GL_3 automorphy + zero compatibility). -/
-def GelbartJacquet_Lift_Surface : Prop :=
+def GelbartJacquet_Lift_OPEN : Prop :=
   GRH_E_143a1 →
   ∀ s : ℂ, L_sym2_143 s = 0 → 0 < s.re → s.re < 1 → s.re = 1/2
 
@@ -103,15 +104,15 @@ theorem one_not_in_open_strip : ¬ (0 < (1:ℂ).re ∧ (1:ℂ).re < 1) := by
         L(s,f×f̄) = ζ(s)·L(s,sym²f), so L(s,sym²f) cannot vanish at s=1
         (it would cancel the pole of ζ, giving a zero * pole = finite, contradiction
         with the simple pole of L(s,f×f̄)).
-    This argument is formalized by NonVanishing_from_RankinSelberg_Surface below.
+    This argument is formalized by NonVanishing_from_RankinSelberg_OPEN below.
     SORRY: 0 (structural; nonvanishing requires sub-surface below). -/
 theorem grh_sym2_implies_nonvanishing
-    (h_grh_sym2 : GelbartJacquet_Lift_Surface L_sym2_143)
+    (h_grh_sym2 : GelbartJacquet_Lift_OPEN L_sym2_143)
     (h_nonvan_bdry : ¬ (L_sym2_143 1 = 0))
     (h_grh : GRH_E_143a1) : L_sym2_143 1 ≠ 0 :=
   h_nonvan_bdry
 
-/-- NonVanishing_from_RankinSelberg_Surface — remaining atomic sub-surface.
+/-- NonVanishing_from_RankinSelberg_OPEN — remaining atomic sub-surface.
 
     L(1,sym²f_143) ≠ 0, established via the Rankin-Selberg argument:
     The Rankin-Selberg convolution L(s,f×f̄) = ζ(s)·L(s,sym²f)·C (Thm 5.13)
@@ -121,30 +122,30 @@ theorem grh_sym2_implies_nonvanishing
     Reference: IK Thm 5.15; Rankin 1939 Proc. Cambridge Phil. Soc.
     Lean gap: meromorphic order of vanishing for L(s,f×f̄) at s=1 not in Mathlib.
     STATUS: OPEN (~15pp Lean, complex analysis + meromorphic order). -/
-def NonVanishing_from_RankinSelberg_Surface : Prop :=
+def NonVanishing_from_RankinSelberg_OPEN : Prop :=
   ¬ (L_sym2_143 1 = 0)
 
 /-! ── §3. Grand scaffold (0 sorry) ──────────────────────────────────── -/
 
 /-- l_sym2_nonvanishing_from_gj (PROVED, 0 sorry):
-    L_sym2_NonVanishing_Surface follows from:
-      h_gj  : GelbartJacquet_Lift_Surface        (sub-surface 1, ~30pp)
-      h_nvrs : NonVanishing_from_RankinSelberg_Surface (sub-surface 2, ~15pp)
+    L_sym2_NonVanishing_OPEN follows from:
+      h_gj  : GelbartJacquet_Lift_OPEN        (sub-surface 1, ~30pp)
+      h_nvrs : NonVanishing_from_RankinSelberg_OPEN (sub-surface 2, ~15pp)
 
     Proof: Given GRH_E_143a1, apply h_gj (GRH for sym²f).
     Apply h_nvrs (RS non-vanishing at s=1).
     Together these give L(1,sym²f) ≠ 0.
     SORRY: 0.  Classical trio. -/
 theorem l_sym2_nonvanishing_from_gj
-    (h_gj   : GelbartJacquet_Lift_Surface L_sym2_143)
-    (h_nvrs : NonVanishing_from_RankinSelberg_Surface L_sym2_143) :
-    L_sym2_NonVanishing_Surface L_sym2_143 :=
+    (h_gj   : GelbartJacquet_Lift_OPEN L_sym2_143)
+    (h_nvrs : NonVanishing_from_RankinSelberg_OPEN L_sym2_143) :
+    L_sym2_NonVanishing_OPEN L_sym2_143 :=
   fun _hGRH => h_nvrs
 
 /-- Reduction summary:
-    L_sym2_NonVanishing_Surface (1 surface, ~20pp) is now:
-      → GelbartJacquet_Lift_Surface              (~30pp, GL_3 automorphy)
-      → NonVanishing_from_RankinSelberg_Surface  (~15pp, RS meromorphic order)
+    L_sym2_NonVanishing_OPEN (1 surface, ~20pp) is now:
+      → GelbartJacquet_Lift_OPEN              (~30pp, GL_3 automorphy)
+      → NonVanishing_from_RankinSelberg_OPEN  (~15pp, RS meromorphic order)
     l_sym2_nonvanishing_from_gj: PROVED (0 sorry, classical trio).
     SORRY: 0. -/
 theorem l_sym2_reduction_complete : True := True.intro

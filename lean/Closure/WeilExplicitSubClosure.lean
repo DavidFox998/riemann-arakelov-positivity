@@ -1,11 +1,11 @@
 /-
   ArakelovRH/SubClosure/WeilExplicitSubClosure.lean
-  Avenue 2 — Gate M1 decomposition: BC6_Theorem6_Surface.
+  Avenue 2 — Gate M1 decomposition: BC6_Theorem6_OPEN.
   Author: David Fox.  Opera Numerorum.  June 2026.
 
-  TARGET: BC6_direct_Surface (Gate M1 of Route B).
+  TARGET: BC6_direct_OPEN (Gate M1 of Route B).
   Definition (RouteBClosure.lean):
-    BC6_direct_Surface :=
+    BC6_direct_OPEN :=
       C_S14_143 > 2 * sqrt 13 ->
       0 < arakelovPairing_X0_143 ->
       forall T > 1, |S_weil T| <= C_S14_143 * T / log T
@@ -30,15 +30,17 @@
     c_s14_lt_weyl            C_S14_143 < 14 (honest note)
     bc6_spectral_condition   C_S14_143 > 2*sqrt(13) AND arakelovPairing > 0
     weil_bound_positive      C_S14_143 * T / log T > 0 for T > 1
-    gate_m1_from_bc6_theorem6  BC6_Theorem6_Surface -> Gate1 surface CLOSED
+    gate_m1_from_bc6_theorem6  BC6_Theorem6_OPEN -> Gate1 surface CLOSED
 
   NAMED OPEN:
-    BC6_Theorem6_Surface  (~35pp):  full BC95 Theorem 6 formalization
+    BC6_Theorem6_OPEN  (~35pp):  full BC95 Theorem 6 formalization
 
   SORRY: 0.  No native_decide.  No opaque.  Classical trio.
   Referee: #print axioms ArakelovRH.SubClosure.WeilExplicit.gate_m1_from_bc6_theorem6
 -/
 
+import ArakelovRH.Scaffold.Gate1_BC6Arithmetic
+import ArakelovRH.C11_ArakelovPairing
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 
@@ -92,7 +94,7 @@ theorem c_s14_pos : 0 < C_S14_143 := by
       C_S14_143 > 2 * sqrt(13)    (C_S14_143_gt_tau, C14_SpectralGap.lean)
       arakelovPairing_X0_143 > 0  (arakelovPairing_X0_143_pos, C11_ArakelovPairing.lean)
     This is the FULL SPECTRAL CONDITION for BC95 Theorem 6.
-    When BC6_Theorem6_Surface is proved in Lean, Gate M1 closes immediately.
+    When BC6_Theorem6_OPEN is proved in Lean, Gate M1 closes immediately.
     SORRY: 0. -/
 theorem bc6_spectral_condition :
     C_S14_143 > 2 * Real.sqrt 13 ∧ 0 < arakelovPairing_X0_143 :=
@@ -111,7 +113,7 @@ theorem weil_bound_positive (T : ℝ) (hT : 1 < T) :
 
 /-! ── §4. Named open gap: BC95 Theorem 6 ─────────────────────────── -/
 
-/-- **BC6_Theorem6_Surface** — Bost-Connes 1995 Theorem 6 for X_0(143).
+/-- **BC6_Theorem6_OPEN** — Bost-Connes 1995 Theorem 6 for X_0(143).
 
     Given the two spectral conditions (BOTH PROVED, 0 sorry):
       (1) C_S14_143 > 2 * sqrt(13)        [C_S14_143_gt_tau]
@@ -138,7 +140,7 @@ theorem weil_bound_positive (T : ℝ) (hT : 1 < T) :
     Lean gap: Fuchsian group spectral theory + Mellin transforms +
     L-function zero theory all absent from Mathlib v4.12.0.
     STATUS: OPEN (~35pp Lean). -/
-def BC6_Theorem6_Surface : Prop :=
+def BC6_Theorem6_OPEN : Prop :=
   C_S14_143 > 2 * Real.sqrt 13 →
   0 < arakelovPairing_X0_143 →
   ∀ T : ℝ, 1 < T →
@@ -147,20 +149,20 @@ def BC6_Theorem6_Surface : Prop :=
 /-! ── §5. Gate M1 closure: BC6_direct from Theorem 6 ────────────── -/
 
 /-- **gate_m1_from_bc6_theorem6** (PROVED, 0 sorry):
-    SelbergWeilBC6_143_Surface S_weil follows from BC6_Theorem6_Surface.
+    SelbergWeilBC6_143_OPEN S_weil follows from BC6_Theorem6_OPEN.
 
     Both proved inputs discharge the two hypotheses:
       C_S14_143_gt_tau          : C_S14_143 > 2 * sqrt 13  (0 sorry)
       arakelovPairing_X0_143_pos: 0 < arakelovPairing_X0_143 (0 sorry)
 
-    This is the GATE CLOSURE THEOREM: once BC6_Theorem6_Surface is formalized
+    This is the GATE CLOSURE THEOREM: once BC6_Theorem6_OPEN is formalized
     in Lean (~35pp), Gate M1 is immediately closed by this 1-line proof.
     No further arithmetic is needed — all inputs are discharged.
 
     SORRY: 0.  Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem gate_m1_from_bc6_theorem6
-    (h : BC6_Theorem6_Surface S_weil) :
-    Gate1.SelbergWeilBC6_143_Surface S_weil :=
+    (h : BC6_Theorem6_OPEN S_weil) :
+    Gate1.SelbergWeilBC6_143_OPEN S_weil :=
   h C_S14_143_gt_tau arakelovPairing_X0_143_pos
 
 /-- **weil_explicit_batch15_complete** (PROVED, 0 sorry):
@@ -170,7 +172,7 @@ theorem gate_m1_from_bc6_theorem6
       PROVED: bc6_spectral_condition (both Gate M1 inputs discharged)
       PROVED: weil_bound_positive (positivity of the Weil bound term)
       PROVED: gate_m1_from_bc6_theorem6 (closure combinator, 0 sorry)
-      OPEN:   BC6_Theorem6_Surface (~35pp: Selberg trace + Weil explicit + BC spectral)
+      OPEN:   BC6_Theorem6_OPEN (~35pp: Selberg trace + Weil explicit + BC spectral)
     SORRY: 0. -/
 theorem weil_explicit_batch15_complete : True := True.intro
 

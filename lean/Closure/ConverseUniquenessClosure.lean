@@ -1,12 +1,12 @@
 /-
   ArakelovRH/Closure/ConverseUniquenessClosure.lean
-  Formal closure of CPS_ConverseAndUniqueness_Surface (Surface 5 of Route B).
+  Formal closure of CPS_ConverseAndUniqueness_OPEN (Surface 5 of Route B).
   Author: David Fox.  Opera Numerorum.  June 2026.
 
-  CPS_ConverseAndUniqueness_Surface:
-    CPS_FunctionalEquation_Surface DirichChar_143 twistedL_143a1 →
-    CPS_EulerProduct_Surface →
-    CPS_BoundedStrips_Surface DirichChar_143 twistedL_143a1 →
+  CPS_ConverseAndUniqueness_OPEN:
+    CPS_FunctionalEquation_OPEN DirichChar_143 twistedL_143a1 →
+    CPS_EulerProduct_OPEN →
+    CPS_BoundedStrips_OPEN DirichChar_143 twistedL_143a1 →
     ∀ s : ℂ, L_143a1 s = newform_143a1_L s
 
   MATHEMATICAL ARGUMENT:
@@ -24,12 +24,12 @@
       Reference: Cremona "Algorithms for Modular Elliptic Curves" Chap. 2.
 
   STRATEGY: Reduce to two atomic sub-surfaces:
-    (1) CPS_Thm33_Surface (~35pp):
+    (1) CPS_Thm33_OPEN (~35pp):
           The full CPS converse theorem: from FE + EulerProduct + BoundedStrips,
           construct an automorphic form π with L(s,π) = L(s,E_143a1).
           This is the ~40pp heart of the CPS 1999 paper, now formalizable in Lean
           once GL_2 automorphic theory is in Mathlib (not yet in v4.12.0).
-    (2) Cremona_Multiplicity_One_Surface (~10pp):
+    (2) Cremona_Multiplicity_One_OPEN (~10pp):
           Strong multiplicity one for GL_2(A_Q): the automorphic form π from (1)
           is unique and equals f_143a1 in S_2(Γ_0(143)).
 
@@ -37,14 +37,15 @@
     converse_uniqueness_from_two: grand scaffold
 
   STATUS after this file:
-    CPS_ConverseAndUniqueness_Surface (1 surface, ~45pp) is now:
-      → CPS_Thm33_Surface              (~35pp, full converse theorem)
-      → Cremona_Multiplicity_Surface   (~10pp, strong multiplicity one)
+    CPS_ConverseAndUniqueness_OPEN (1 surface, ~45pp) is now:
+      → CPS_Thm33_OPEN              (~35pp, full converse theorem)
+      → Cremona_Multiplicity_OPEN   (~10pp, strong multiplicity one)
 
   SORRY: 0.  No axiom.  No native_decide.  No opaque.  Classical trio.
   Referee: #print axioms ArakelovRH.ConverseUniquenessClosure.converse_uniqueness_from_two
 -/
 
+import ArakelovRH.Scaffold.ConverseTheorem
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 namespace ArakelovRH.ConverseUniquenessClosure
@@ -57,7 +58,7 @@ variable (twistedL_143a1 : DirichChar_143 → ℂ → ℂ)
 
 /-! ── §1. Sub-surfaces ────────────────────────────────────────────────── -/
 
-/-- CPS_Thm33_Surface — sub-surface (1).
+/-- CPS_Thm33_OPEN — sub-surface (1).
 
     Cogdell-Piatetski-Shapiro 1999 Theorem 3.3 for GL_2/Q:
     Given:
@@ -69,13 +70,13 @@ variable (twistedL_143a1 : DirichChar_143 → ℂ → ℂ)
     Reference: CPS 1999 §3; Kim "Functoriality" AMS 2003.
     Lean gap: cuspidal automorphic forms + converse theorem for GL_2 not in Mathlib.
     STATUS: OPEN (~35pp Lean, the largest single sub-surface remaining). -/
-def CPS_Thm33_Surface : Prop :=
-  CPS_FunctionalEquation_Surface DirichChar_143 twistedL_143a1 →
-  CPS_EulerProduct_Surface →
-  CPS_BoundedStrips_Surface DirichChar_143 twistedL_143a1 →
+def CPS_Thm33_OPEN : Prop :=
+  CPS_FunctionalEquation_OPEN DirichChar_143 twistedL_143a1 →
+  CPS_EulerProduct_OPEN →
+  CPS_BoundedStrips_OPEN DirichChar_143 twistedL_143a1 →
   ∃ (π_L : ℂ → ℂ), ∀ s : ℂ, L_143a1 s = π_L s
 
-/-- Cremona_MultOne_Surface — sub-surface (2).
+/-- Cremona_MultOne_OPEN — sub-surface (2).
 
     Strong multiplicity one + Cremona uniqueness for f_143a1:
     If π_L : ℂ → ℂ matches L_143a1 and is the L-function of an automorphic
@@ -84,7 +85,7 @@ def CPS_Thm33_Surface : Prop :=
     Reference: Cremona "Algorithms" §2.14; strong multiplicity one: Jacquet-Langlands.
     Lean gap: Cremona's elliptic curve database not in Mathlib v4.12.0.
     STATUS: OPEN (~10pp Lean, database lookup + multiplicity one). -/
-def Cremona_MultOne_Surface : Prop :=
+def Cremona_MultOne_OPEN : Prop :=
   ∀ (π_L : ℂ → ℂ),
     (∀ s : ℂ, L_143a1 s = π_L s) →
     ∀ s : ℂ, π_L s = newform_143a1_L s
@@ -92,7 +93,7 @@ def Cremona_MultOne_Surface : Prop :=
 /-! ── §2. Proved scaffold (0 sorry) ─────────────────────────────────── -/
 
 /-- converse_uniqueness_from_two (PROVED, 0 sorry):
-    CPS_ConverseAndUniqueness_Surface follows from CPS_Thm33_Surface + Cremona_MultOne_Surface.
+    CPS_ConverseAndUniqueness_OPEN follows from CPS_Thm33_OPEN + Cremona_MultOne_OPEN.
 
     Proof: Given FE + EulerProduct + BoundedStrips:
       h_cps h_fe h_ep h_bnd : ∃ π_L, ∀ s, L_143a1 s = π_L s   (CPS Thm 3.3)
@@ -101,9 +102,9 @@ def Cremona_MultOne_Surface : Prop :=
     SORRY: 0.  Classical trio.
     Referee: #print axioms ArakelovRH.ConverseUniquenessClosure.converse_uniqueness_from_two -/
 theorem converse_uniqueness_from_two
-    (h_cps  : CPS_Thm33_Surface DirichChar_143 twistedL_143a1)
-    (h_mult : Cremona_MultOne_Surface newform_143a1_L) :
-    CPS_ConverseAndUniqueness_Surface DirichChar_143 newform_143a1_L twistedL_143a1 := by
+    (h_cps  : CPS_Thm33_OPEN DirichChar_143 twistedL_143a1)
+    (h_mult : Cremona_MultOne_OPEN newform_143a1_L) :
+    CPS_ConverseAndUniqueness_OPEN DirichChar_143 newform_143a1_L twistedL_143a1 := by
   intro h_fe h_ep h_bnd
   obtain ⟨π_L, h_match⟩ := h_cps h_fe h_ep h_bnd
   intro s
@@ -111,9 +112,9 @@ theorem converse_uniqueness_from_two
   exact h_mult π_L (fun s => h_match s) s
 
 /-- Reduction summary:
-    CPS_ConverseAndUniqueness_Surface (1 surface, ~45pp) is now:
-      → CPS_Thm33_Surface              (~35pp, full GL_2 converse theorem)
-      → Cremona_MultOne_Surface        (~10pp, strong multiplicity one + database)
+    CPS_ConverseAndUniqueness_OPEN (1 surface, ~45pp) is now:
+      → CPS_Thm33_OPEN              (~35pp, full GL_2 converse theorem)
+      → Cremona_MultOne_OPEN        (~10pp, strong multiplicity one + database)
     converse_uniqueness_from_two: PROVED (0 sorry, classical trio).
     SORRY: 0. -/
 theorem converse_uniqueness_reduction_complete : True := True.intro

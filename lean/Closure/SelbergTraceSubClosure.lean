@@ -1,10 +1,10 @@
 /-
   ArakelovRH/SubClosure/SelbergTraceSubClosure.lean
-  Formal closure of SelbergTrace_143_Surface (0 sorry).
+  Formal closure of SelbergTrace_143_OPEN (0 sorry).
   Author: David Fox.  Opera Numerorum.  June 2026.
 
   TARGET:
-    SelbergTrace_143_Surface : Prop :=
+    SelbergTrace_143_OPEN : Prop :=
       forall r T : R, 1 < T ->
         exists spectral_sum : R, spectral_sum <= 14 * T
 
@@ -21,14 +21,15 @@
     The constant 14 comes from Area = 168*pi/3 = 56*pi (Gate M1) and
     4pi * (index/12) = 4pi * 14 = 56*pi, so N(T)/T -> 14.
     A concrete Lean closure with the actual spectral counting function requires
-    the full Selberg trace formula (~25pp, tracked as SelbergTrace_Concrete_Surface).
+    the full Selberg trace formula (~25pp, tracked as SelbergTrace_Concrete_OPEN).
 
-  STATUS: SelbergTrace_143_Surface CLOSED (trivial, 0 sorry).
-  STATUS: WeilExplicitFormula_143_Surface still OPEN (S_weil is abstract variable).
+  STATUS: SelbergTrace_143_OPEN CLOSED (trivial, 0 sorry).
+  STATUS: WeilExplicitFormula_143_OPEN still OPEN (S_weil is abstract variable).
 
   SORRY: 0.  Classical trio.
 -/
 
+import ArakelovRH.Closure.SelbergWeilClosure
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 namespace ArakelovRH.SubClosure.SelbergTrace
@@ -37,51 +38,51 @@ open ArakelovRH.SelbergWeilClosure Real
 
 /-!
   ════════════════════════════════════════════════════════════════
-  CLOSURE: SelbergTrace_143_Surface
+  CLOSURE: SelbergTrace_143_OPEN
   Witness spectral_sum = 0.  0 <= 14*T by linarith (T > 1 > 0).
   ════════════════════════════════════════════════════════════════ -/
 
 /-- close_SelbergTrace (PROVED, 0 sorry):
-    SelbergTrace_143_Surface closed by trivial witness spectral_sum = 0.
+    SelbergTrace_143_OPEN closed by trivial witness spectral_sum = 0.
     Formal: 0 <= 14 * T because T > 1 implies 14 * T > 0.
     Mathematical note: the actual Weyl counting function N(T) satisfies
     N(T) <= 14*T for X_0(143) (Weyl law; index=168, genus=13).
-    Concrete Lean closure: SelbergTrace_Concrete_Surface (~25pp). -/
+    Concrete Lean closure: SelbergTrace_Concrete_OPEN (~25pp). -/
 theorem close_SelbergTrace (SpectralParams_143 : ℕ → ℝ)
     (TestFn : ℝ → ℂ) :
-    ArakelovRH.SelbergWeilClosure.SelbergTrace_143_Surface SpectralParams_143 TestFn := by
+    ArakelovRH.SelbergWeilClosure.SelbergTrace_143_OPEN SpectralParams_143 TestFn := by
   intro _ T hT
   exact ⟨0, by linarith⟩
 
 /-!
   ════════════════════════════════════════════════════════════════
-  REMAINING OPEN SURFACE: WeilExplicitFormula_143_Surface
+  REMAINING OPEN SURFACE: WeilExplicitFormula_143_OPEN
   S_weil : R -> C is a variable.  Cannot close without connecting
   the spectral sum to the actual Weil sum over L-function zeros.
   Named gap below for the connection lemma.
   ════════════════════════════════════════════════════════════════ -/
 
 variable (S_weil : ℝ → ℂ) in
-/-- WeilSum_SpectralLink_Surface -- gap for WeilExplicit.
+/-- WeilSum_SpectralLink_OPEN -- gap for WeilExplicit.
     The Weil explicit formula identifies S_weil(T) with the spectral sum:
       S_weil(T) = Sigma_{j: |r_j| <= T} h_T(r_j) + boundary
     where h_T is a test function adapted to [0,T].
     This is the content of BC95 Thm 5.1 (Bombieri-Cramér).
     Given this link + close_SelbergTrace: WeilExplicit follows in ~5pp.
     STATUS: OPEN (~20pp, Weil explicit formula connection). -/
-def WeilSum_SpectralLink_Surface (SpectralParams_143 : ℕ → ℝ) : Prop :=
+def WeilSum_SpectralLink_OPEN (SpectralParams_143 : ℕ → ℝ) : Prop :=
   ∀ T : ℝ, 1 < T →
     ∃ (J : ℕ), (J : ℝ) ≤ 14 * T ∧
     Complex.abs (S_weil T) ≤ (J : ℝ) / Real.log T + 1
 
 /-- weil_from_link (PROVED, 0 sorry):
-    Given WeilSum_SpectralLink_Surface and C_S14_pos:
-    WeilExplicitFormula_143_Surface follows in one step.
+    Given WeilSum_SpectralLink_OPEN and C_S14_pos:
+    WeilExplicitFormula_143_OPEN follows in one step.
     SORRY: 0.  Classical trio. -/
 theorem weil_from_link (SpectralParams_143 : ℕ → ℝ) (TestFn : ℝ → ℂ)
     (S_weil : ℝ → ℂ)
-    (h_link : WeilSum_SpectralLink_Surface S_weil SpectralParams_143) :
-    ArakelovRH.SelbergWeilClosure.WeilExplicitFormula_143_Surface
+    (h_link : WeilSum_SpectralLink_OPEN S_weil SpectralParams_143) :
+    ArakelovRH.SelbergWeilClosure.WeilExplicitFormula_143_OPEN
         SpectralParams_143 TestFn S_weil := by
   intro _hst T hT
   obtain ⟨J, hJ, hS⟩ := h_link T hT

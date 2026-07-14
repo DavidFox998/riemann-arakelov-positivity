@@ -1,9 +1,9 @@
 /-
   ArakelovRH/Closure/WeilBoundToGRHClosure.lean
-  Formal closure of WeilBound_to_GRH_Surface (Surface 6 of Route B).
+  Formal closure of WeilBound_to_GRH_OPEN (Surface 6 of Route B).
   Author: David Fox.  Opera Numerorum.  June 2026.
 
-  WeilBound_to_GRH_Surface:
+  WeilBound_to_GRH_OPEN:
     (∀ s : ℂ, L_143a1 s = newform_143a1_L s) →
     (∀ T : ℝ, 1 < T → |S_weil T| ≤ C_S14_143 · T / log T) →
     GRH_E_143a1
@@ -20,11 +20,11 @@
       (with β > 1/2), which for T large enough exceeds C·T/log T.  Contradiction.
 
   STRATEGY: Reduce to two atomic sub-surfaces:
-    (1) ExplicitFormula_ZeroSum_Surface (~20pp):
+    (1) ExplicitFormula_ZeroSum_OPEN (~20pp):
           The Weil explicit formula expresses S_weil(T) as a sum over zeros of
           L(s,E_143a1), with each zero ρ contributing T^{ρ} / (ρ·log T).
           Reference: Weil 1952; Bombieri 2000.
-    (2) ZeroOffCriticalLine_Contradiction_Surface (~10pp):
+    (2) ZeroOffCriticalLine_Contradiction_OPEN (~10pp):
           If β = Re(ρ) > 1/2 (zero off critical line), then the zero-sum exceeds
           the Weil bound C·T/log T for sufficiently large T. Contradiction.
 
@@ -33,7 +33,7 @@
     weil_grh_from_two_surfaces: grand scaffold                            (0 sorry)
 
   STATUS after this file:
-    WeilBound_to_GRH_Surface REDUCED: 1 surface → 2 sub-surfaces.
+    WeilBound_to_GRH_OPEN REDUCED: 1 surface → 2 sub-surfaces.
     Sub-surface (1): ~20pp (Weil explicit formula for GL_2 L-functions).
     Sub-surface (2): ~10pp (contradiction from off-critical zero + Weil bound).
 
@@ -41,6 +41,7 @@
   Referee: #print axioms ArakelovRH.WeilBoundToGRHClosure.weil_grh_from_two_surfaces
 -/
 
+import ArakelovRH.Scaffold.ConverseTheorem
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
@@ -52,7 +53,7 @@ variable (newform_143a1_L : ℂ → ℂ)
 
 /-! ── §1. Sub-surfaces ────────────────────────────────────────────────── -/
 
-/-- ExplicitFormula_ZeroSum_Surface — sub-surface (1).
+/-- ExplicitFormula_ZeroSum_OPEN — sub-surface (1).
 
     The Weil explicit formula for GL_2 L-functions:
     Given L(s,E_143a1) = L(s,f), the sum S_weil(T) = Σ_ρ T^ρ / (ρ·log T)
@@ -62,7 +63,7 @@ variable (newform_143a1_L : ℂ → ℂ)
                BC95 Theorem 6; IK §5.5.
     Lean gap: explicit formula for GL_2 L-functions not in Mathlib v4.12.0.
     STATUS: OPEN (~20pp Lean, complex analysis + L-function zero theory). -/
-def ExplicitFormula_ZeroSum_Surface : Prop :=
+def ExplicitFormula_ZeroSum_OPEN : Prop :=
   (∀ s : ℂ, L_143a1 s = newform_143a1_L s) →
   ∃ (zeros_143 : ℕ → ℂ),
     (∀ n : ℕ, L_143a1 (zeros_143 n) = 0) ∧
@@ -71,7 +72,7 @@ def ExplicitFormula_ZeroSum_Surface : Prop :=
         (∑ n in Finset.range (⌊T⌋₊), Complex.abs ((zeros_143 n).re - 1/2)) *
         T / Real.log T + C_S14_143 * T / Real.log T
 
-/-- ZeroOffCriticalLine_Contradiction_Surface — sub-surface (2).
+/-- ZeroOffCriticalLine_Contradiction_OPEN — sub-surface (2).
 
     If L(s,f_143a1) has a zero ρ with Re(ρ) > 1/2, then for large T
     the zero-sum exceeds the Weil bound C_S14_143 · T / log T.
@@ -82,7 +83,7 @@ def ExplicitFormula_ZeroSum_Surface : Prop :=
     explicit formula + real analysis on rpow; available in Mathlib but needs
     careful assembly.
     STATUS: OPEN (~10pp Lean). -/
-def ZeroOffCriticalLine_Contradiction_Surface : Prop :=
+def ZeroOffCriticalLine_Contradiction_OPEN : Prop :=
   ∀ (ρ : ℂ), L_143a1 ρ = 0 → 0 < ρ.re → ρ.re < 1 →
     ρ.re = 1/2 ∨
     ∃ T₀ : ℝ, 1 < T₀ ∧
@@ -108,9 +109,9 @@ theorem log_pos_of_gt_one (T : ℝ) (hT : 1 < T) : 0 < Real.log T :=
   Real.log_pos hT
 
 /-- weil_grh_from_two_surfaces (PROVED, 0 sorry):
-    WeilBound_to_GRH_Surface follows from:
-      h_ef  : ExplicitFormula_ZeroSum_Surface  (sub-surface 1, ~20pp)
-      h_zcc : ZeroOffCriticalLine_Contradiction_Surface  (sub-surface 2, ~10pp)
+    WeilBound_to_GRH_OPEN follows from:
+      h_ef  : ExplicitFormula_ZeroSum_OPEN  (sub-surface 1, ~20pp)
+      h_zcc : ZeroOffCriticalLine_Contradiction_OPEN  (sub-surface 2, ~10pp)
 
     Proof: By contradiction. Suppose GRH_E_143a1 fails.
     Then ∃ ρ with L(ρ)=0 and 0 < Re(ρ) < 1 and Re(ρ) ≠ 1/2.
@@ -119,9 +120,9 @@ theorem log_pos_of_gt_one (T : ℝ) (hT : 1 < T) : 0 < Real.log T :=
     SORRY: 0.  Classical trio (classical.choice for ∃-elim in contradiction).
     Referee: #print axioms ArakelovRH.WeilBoundToGRHClosure.weil_grh_from_two_surfaces -/
 theorem weil_grh_from_two_surfaces
-    (h_ef  : ExplicitFormula_ZeroSum_Surface newform_143a1_L)
-    (h_zcc : ZeroOffCriticalLine_Contradiction_Surface) :
-    WeilBound_to_GRH_Surface newform_143a1_L := by
+    (h_ef  : ExplicitFormula_ZeroSum_OPEN newform_143a1_L)
+    (h_zcc : ZeroOffCriticalLine_Contradiction_OPEN) :
+    WeilBound_to_GRH_OPEN newform_143a1_L := by
   intro h_id h_weil
   -- GRH_E_143a1: all non-trivial zeros of L_143a1 lie on Re(s) = 1/2.
   -- Proof: suppose ρ is a non-trivial zero with Re(ρ) ≠ 1/2.
@@ -139,9 +140,9 @@ theorem weil_grh_from_two_surfaces
     linarith [Complex.abs.nonneg (S_weil T₀)]
 
 /-- Reduction summary:
-    WeilBound_to_GRH_Surface (1 surface, ~30pp total) is now:
-      → ExplicitFormula_ZeroSum_Surface              (~20pp, Weil explicit formula)
-      → ZeroOffCriticalLine_Contradiction_Surface    (~10pp, contradiction argument)
+    WeilBound_to_GRH_OPEN (1 surface, ~30pp total) is now:
+      → ExplicitFormula_ZeroSum_OPEN              (~20pp, Weil explicit formula)
+      → ZeroOffCriticalLine_Contradiction_OPEN    (~10pp, contradiction argument)
     rpow_half_lt_rpow_beta: PROVED (0 sorry).
     weil_grh_from_two_surfaces: PROVED (0 sorry, classical trio).
     SORRY: 0. -/

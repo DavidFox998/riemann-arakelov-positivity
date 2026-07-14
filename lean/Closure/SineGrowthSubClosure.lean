@@ -4,8 +4,8 @@
   Author: David Fox.  Opera Numerorum.  June 2026.
 
   MATHEMATICAL CONTENT:
-    The strip bound for L(s,f,chi) (CPS_BoundedStrips_Surface) requires:
-      GammaFactor_VerticalGrowth_Surface: |Gamma(s)| <= C*(1+|T|)^{sigma-1/2} * exp(-pi|T|/2)
+    The strip bound for L(s,f,chi) (CPS_BoundedStrips_OPEN) requires:
+      GammaFactor_VerticalGrowth_OPEN: |Gamma(s)| <= C*(1+|T|)^{sigma-1/2} * exp(-pi|T|/2)
 
     The key input for the Stirling bound comes via the Gamma reflection formula:
       Gamma(s) * Gamma(1-s) = pi / sin(pi*s)
@@ -23,17 +23,17 @@
             sinh(x) >= exp(x)/3  for x >= 1.
             Uses: exp_one_gt_d9 (exp(1) > 2.718), exp_le_exp (monotonicity).
 
-      (B) sin_modulus_sq_identity_Surface (NAMED OPEN, ~3pp):
+      (B) sin_modulus_sq_identity_OPEN (NAMED OPEN, ~3pp):
             Complex.normSq (Complex.sin (pi*s)) = sin^2(pi*Re s) + sinh^2(pi*Im s).
             Proof sketch: expand sin(a+ib) = sin(a)cosh(b) + i*cos(a)sinh(b),
             then use cosh^2 - sinh^2 = 1, sin^2+cos^2 = 1 to simplify normSq.
             Lean gap: Complex.sin expansion + hyperbolic identities in Mathlib 4.12.0.
 
       (C) sin_ge_sinh_from_id (PROVED, 0 sorry, conditional):
-            Given sin_modulus_sq_identity_Surface, sin >= sinh(pi*|T|).
+            Given sin_modulus_sq_identity_OPEN, sin >= sinh(pi*|T|).
             Proof: normSq(sin) = sin^2 + sinh^2 >= sinh^2, take sqrt.
 
-      (D) GammaStirling_SineDecay_Surface (NAMED OPEN, ~15pp):
+      (D) GammaStirling_SineDecay_OPEN (NAMED OPEN, ~15pp):
             The full Stirling bound |Gamma(sigma+iT)| ~ (2pi)^{1/2}|T|^{sigma-1/2}*exp(-pi|T|/2).
             Reduces to: sine growth (proved here) + Gamma(1-s) lower bound (open).
 
@@ -107,7 +107,7 @@ theorem sinh_nonneg_of_nonneg {x : ℝ} (hx : 0 ≤ x) : 0 ≤ Real.sinh x := by
 
 /-! == Section B: Sine modulus squared identity (NAMED OPEN) == -/
 
-/-- **sin_modulus_sq_identity_Surface** — the normSq identity for Complex.sin.
+/-- **sin_modulus_sq_identity_OPEN** — the normSq identity for Complex.sin.
 
     For s = sigma + i*T:
       Complex.normSq (Complex.sin (pi * s)) =
@@ -129,13 +129,13 @@ theorem sinh_nonneg_of_nonneg {x : ℝ} (hx : 0 ≤ x) : 0 ≤ Real.sinh x := by
       Real.cosh_sq_sub_sinh_sq (cosh^2 - sinh^2 = 1).
     All in Mathlib 4.12.0 but assembly requires care.
     STATUS: OPEN (~3pp Lean). -/
-def sin_modulus_sq_identity_Surface : Prop :=
+def sin_modulus_sq_identity_OPEN : Prop :=
   ∀ s : ℂ,
   Complex.normSq (Complex.sin (Real.pi * s)) =
     Real.sin (Real.pi * s.re)^2 + Real.sinh (Real.pi * s.im)^2
 
 /-- **sin_modulus_ge_sinh_sq** (PROVED, 0 sorry):
-    Given sin_modulus_sq_identity_Surface, for any s:
+    Given sin_modulus_sq_identity_OPEN, for any s:
       Complex.abs (Complex.sin (pi*s))^2 >= sinh(pi*|s.im|)^2
 
     This is immediate from the identity: normSq = sin^2 + sinh^2 >= sinh^2
@@ -143,7 +143,7 @@ def sin_modulus_sq_identity_Surface : Prop :=
 
     SORRY: 0. -/
 theorem sin_modulus_ge_sinh_sq
-    (h_id : sin_modulus_sq_identity_Surface) (s : ℂ) :
+    (h_id : sin_modulus_sq_identity_OPEN) (s : ℂ) :
     Real.sinh (Real.pi * |s.im|) ^ 2 ≤ Complex.abs (Complex.sin (Real.pi * s)) ^ 2 := by
   rw [Complex.sq_abs]
   have hid := h_id s
@@ -157,7 +157,7 @@ theorem sin_modulus_ge_sinh_sq
   linarith [sq_nonneg (Real.sin (Real.pi * s.re))]
 
 /-- **sin_modulus_ge_sinh** (PROVED, 0 sorry):
-    Given sin_modulus_sq_identity_Surface:
+    Given sin_modulus_sq_identity_OPEN:
       Complex.abs (Complex.sin (pi*s)) >= sinh(pi*|s.im|)
 
     Proof: take sqrt of sin_modulus_ge_sinh_sq.
@@ -165,7 +165,7 @@ theorem sin_modulus_ge_sinh_sq
 
     SORRY: 0.  Classical trio. -/
 theorem sin_modulus_ge_sinh
-    (h_id : sin_modulus_sq_identity_Surface) (s : ℂ) :
+    (h_id : sin_modulus_sq_identity_OPEN) (s : ℂ) :
     Real.sinh (Real.pi * |s.im|) ≤ Complex.abs (Complex.sin (Real.pi * s)) := by
   have h_sinh_nn : 0 ≤ Real.sinh (Real.pi * |s.im|) :=
     sinh_nonneg_of_nonneg (mul_nonneg (le_of_lt Real.pi_pos) (abs_nonneg _))
@@ -177,7 +177,7 @@ theorem sin_modulus_ge_sinh
 /-! == Section C: Full sine growth bound (combining A and B) == -/
 
 /-- **sin_modulus_ge_exp_third** (PROVED, 0 sorry):
-    Given sin_modulus_sq_identity_Surface, for |Im(s)| >= 1/pi:
+    Given sin_modulus_sq_identity_OPEN, for |Im(s)| >= 1/pi:
       Complex.abs (Complex.sin (pi*s)) >= exp(pi*|Im(s)|) / 3
 
     Proof chain:
@@ -186,7 +186,7 @@ theorem sin_modulus_ge_sinh
 
     SORRY: 0.  Classical trio. -/
 theorem sin_modulus_ge_exp_third
-    (h_id : sin_modulus_sq_identity_Surface)
+    (h_id : sin_modulus_sq_identity_OPEN)
     (s : ℂ) (h_im : 1 ≤ Real.pi * |s.im|) :
     Real.exp (Real.pi * |s.im|) / 3 ≤ Complex.abs (Complex.sin (Real.pi * s)) := by
   calc Real.exp (Real.pi * |s.im|) / 3
@@ -195,7 +195,7 @@ theorem sin_modulus_ge_exp_third
 
 /-! == Section D: Connection to GammaStirling (NAMED OPEN) == -/
 
-/-- **GammaStirling_SineDecay_Surface** — the remaining gap for Stirling's formula.
+/-- **GammaStirling_SineDecay_OPEN** — the remaining gap for Stirling's formula.
 
     The full Gamma Stirling bound on vertical strips requires:
       |Gamma(sigma+iT)| ~ sqrt(2*pi) * |T|^{sigma-1/2} * exp(-pi*|T|/2)
@@ -215,24 +215,24 @@ theorem sin_modulus_ge_exp_third
     Mathematical reference: Stein-Shakarchi, Complex Analysis, §6.1.
     Lean gap: ~12pp of complex analysis beyond what Mathlib v4.12.0 provides.
     STATUS: OPEN. -/
-def GammaStirling_SineDecay_Surface : Prop :=
+def GammaStirling_SineDecay_OPEN : Prop :=
   ∀ (σ T : ℝ), (0 : ℝ) < σ → σ < 1 → (1 : ℝ) ≤ Real.pi * |T| →
   Complex.abs (Complex.Gamma (σ + T * Complex.I)) ≤
     3 * Real.pi * Real.exp (-(Real.pi * |T|)) /
     Complex.abs (Complex.Gamma (1 - σ - T * Complex.I))
 
 /-- **gamma_stirling_from_reflection** (PROVED, 0 sorry):
-    Given sin_modulus_sq_identity_Surface and Gamma reflection formula (Mathlib):
+    Given sin_modulus_sq_identity_OPEN and Gamma reflection formula (Mathlib):
       |Gamma(s)| * |Gamma(1-s)| * |sin(pi*s)| = pi
     Combined with sin_modulus_ge_exp_third:
       |Gamma(s)| * |Gamma(1-s)| <= 3*pi*exp(-pi*|T|)
 
-    This is the FORMAL derivation of GammaStirling_SineDecay_Surface
+    This is the FORMAL derivation of GammaStirling_SineDecay_OPEN
     from the reflection formula and the sine growth bound.
 
     STATUS: PROVED assuming reflection formula identity from Mathlib. -/
 theorem gamma_stirling_from_reflection
-    (h_id : sin_modulus_sq_identity_Surface)
+    (h_id : sin_modulus_sq_identity_OPEN)
     (s : ℂ)
     (h_im : 1 ≤ Real.pi * |s.im|)
     (h_ne1 : ∀ n : ℤ, s ≠ n)

@@ -1,22 +1,24 @@
 /-
   ArakelovRH/SubClosure/RSIdentityAttack.lean
-  Batch 24: RS_EulerFactorIdentity_Surface closes given RS_Identity_Surface.
+  Batch 24: RS_EulerFactorIdentity_OPEN closes given RS_Identity_OPEN.
   Author: David Fox.  Opera Numerorum.  June 2026.
 
   KEY RESULT (PROVED, 0 sorry):
     rs_factor_from_identity:
-      RS_Identity_Surface → RS_EulerFactorIdentity_Surface.
+      RS_Identity_OPEN → RS_EulerFactorIdentity_OPEN.
     Witnesses: α_p = β_p = (√p : ℝ) : ℂ, satisfying
     Complex.abs α_p = Real.sqrt p  (abs_ofReal + abs_of_nonneg).
-    RS identity follows from RS_Identity_Surface.
+    RS identity follows from RS_Identity_OPEN.
 
-    Effect: RS_EulerFactorIdentity_Surface (~8pp) reduces to
-    RS_Identity_Surface (already named in IwaniecKowalski.lean, ~15pp).
+    Effect: RS_EulerFactorIdentity_OPEN (~8pp) reduces to
+    RS_Identity_OPEN (already named in IwaniecKowalski.lean, ~15pp).
     The α/β part is PROVED; only the RS identity itself remains.
 
   SORRY: 0.  No native_decide.  No opaque.  Classical trio only.
 -/
 
+import ArakelovRH.SubClosure.FEandRSDecomp
+import ArakelovRH.Scaffold.IwaniecKowalski
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 namespace ArakelovRH.RSIdentityAttack
@@ -40,9 +42,9 @@ theorem rs_alpha_witness (p : ℕ) :
 /-! -- §2.  Main combinator --------------------------------------------------- -/
 
 /-- **rs_factor_from_identity** (PROVED, 0 sorry):
-    RS_Identity_Surface → RS_EulerFactorIdentity_Surface.
+    RS_Identity_OPEN → RS_EulerFactorIdentity_OPEN.
 
-    RS_EulerFactorIdentity_Surface requires:
+    RS_EulerFactorIdentity_OPEN requires:
       ∀ prime p ∤ 143, ∀ s with Re(s) > 1:
         ∃ α_p β_p : ℂ,
           Complex.abs α_p = √p  ∧
@@ -54,12 +56,12 @@ theorem rs_alpha_witness (p : ℕ) :
     RS identity: from h_id.
 
     After this combinator:
-      RS_EulerFactorIdentity_Surface CLOSED given RS_Identity_Surface.
-      Remaining atomic gap: RS_Identity_Surface (~15pp, IK Thm 5.13).
+      RS_EulerFactorIdentity_OPEN CLOSED given RS_Identity_OPEN.
+      Remaining atomic gap: RS_Identity_OPEN (~15pp, IK Thm 5.13).
     SORRY: 0. -/
 theorem rs_factor_from_identity
-    (h_id : RS_Identity_Surface RankinSelberg_L L_sym2_143) :
-    RS_EulerFactorIdentity_Surface RankinSelberg_L L_sym2_143 := by
+    (h_id : RS_Identity_OPEN RankinSelberg_L L_sym2_143) :
+    RS_EulerFactorIdentity_OPEN RankinSelberg_L L_sym2_143 := by
   intro p _hp _hp143 s hs
   exact ⟨(Real.sqrt p : ℂ), (Real.sqrt p : ℂ),
     rs_alpha_witness p, rs_alpha_witness p, h_id s hs⟩

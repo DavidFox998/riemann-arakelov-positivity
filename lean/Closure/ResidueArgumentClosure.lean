@@ -1,9 +1,9 @@
 /-
   ArakelovRH/Closure/ResidueArgumentClosure.lean
-  Formal closure of Residue_Argument_Surface (Surface 8 of Route B).
+  Formal closure of Residue_Argument_OPEN (Surface 8 of Route B).
   Author: David Fox.  Opera Numerorum.  June 2026.
 
-  Residue_Argument_Surface: L_sym2_143 1 ≠ 0 → L_143a1 1 ≠ 0.
+  Residue_Argument_OPEN: L_sym2_143 1 ≠ 0 → L_143a1 1 ≠ 0.
 
   MATHEMATICAL ARGUMENT (Iwaniec-Kowalski Thm 5.15):
     The Rankin-Selberg convolution satisfies:
@@ -17,9 +17,9 @@
     the boundary of absolute convergence (Re(s)=1, Dirichlet series argument).
 
   STRATEGY: Reduce to two atomic sub-surfaces:
-    (1) RankinSelberg_Factorization_Surface (~20pp):
+    (1) RankinSelberg_Factorization_OPEN (~20pp):
           L(s,f×f̄) = ζ(s)·L(s,sym²f) for Re(s) > 1, with Petersson normalization.
-    (2) PeterssonNorm_NonZero_Surface (~5pp):
+    (2) PeterssonNorm_NonZero_OPEN (~5pp):
           The Petersson norm ‖f_143a1‖²_Pet > 0 (follows from f ≠ 0 in S_2(Γ_0(143))).
 
   KEY PROVED THEOREMS (0 sorry):
@@ -27,7 +27,7 @@
     residue_argument_from_factorization: closing theorem (0 sorry)
 
   STATUS after this file:
-    Residue_Argument_Surface REDUCED: 1 surface → 2 sub-surfaces.
+    Residue_Argument_OPEN REDUCED: 1 surface → 2 sub-surfaces.
     Sub-surface (1): ~20pp (Rankin-Selberg L-function theory).
     Sub-surface (2): ~5pp (Petersson norm positivity, formalizable from f≠0).
 
@@ -35,6 +35,7 @@
   Referee: #print axioms ArakelovRH.ResidueArgumentClosure.residue_argument_from_factorization
 -/
 
+import ArakelovRH.Scaffold.IwaniecKowalski
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
@@ -48,7 +49,7 @@ variable (RankinSelberg_L : ℂ → ℂ)
 variable (L_sym2_143 : ℂ → ℂ)
 variable (L_143a1_local : ℕ → ℂ → ℂ)
 
-/-- PeterssonNorm_Pos_Surface — sub-surface (2a).
+/-- PeterssonNorm_Pos_OPEN — sub-surface (2a).
 
     The Petersson inner product norm ‖f_143a1‖²_{Pet} > 0.
     Follows from f_143a1 ≠ 0 in S_2(Γ_0(143)) (Cremona tables confirm
@@ -56,13 +57,13 @@ variable (L_143a1_local : ℕ → ℂ → ℂ)
     Mathematical reference: Diamond-Shurman §6.4; Cremona "Algorithms".
     Lean gap: Petersson inner product for S_k(Γ_0(N)) not in Mathlib v4.12.0.
     STATUS: OPEN (~5pp Lean, inner product on cusp forms). -/
-def PeterssonNorm_Pos_Surface : Prop :=
+def PeterssonNorm_Pos_OPEN : Prop :=
   ∃ (norm_sq : ℝ), 0 < norm_sq ∧
   -- Petersson norm squared of f_143a1
   ∀ s : ℂ, 1 < s.re →
     RankinSelberg_L s = riemannZeta s * L_sym2_143 s * (norm_sq : ℂ)
 
-/-- RankinSelberg_SimplePoleat1_Surface — sub-surface (2b).
+/-- RankinSelberg_SimplePoleat1_OPEN — sub-surface (2b).
 
     The Rankin-Selberg L-function L(s, f×f̄) has a simple pole at s=1
     with residue equal to the Petersson norm squared (up to an explicit
@@ -71,25 +72,25 @@ def PeterssonNorm_Pos_Surface : Prop :=
     Lean gap: meromorphic continuation + residue computation for RS L-functions
     not in Mathlib v4.12.0.
     STATUS: OPEN (~15pp Lean, complex analysis + RS theory). -/
-def RankinSelberg_SimplePoleat1_Surface : Prop :=
+def RankinSelberg_SimplePoleat1_OPEN : Prop :=
   ∃ (c : ℝ), 0 < c ∧
   -- L(s,f×f̄) ~ c/(s-1) as s → 1
   Filter.Tendsto (fun s : ℂ => (s - 1) * RankinSelberg_L s)
     (nhds 1) (nhds c)
 
-/-- L_sym2_One_from_RS_Surface — sub-surface (2c).
+/-- L_sym2_One_from_RS_OPEN — sub-surface (2c).
 
     Given the factorization L(s,f×f̄) = ζ(s)·L(s,sym²f)·c and the simple pole
     of ζ(s) at s=1 with residue 1: L(1,sym²f) ≠ 0 ↔ RankinSelberg pole ≠ 0.
     This is the key bridge: RS pole (positive, from Petersson norm) + ζ residue=1
     → L(1,sym²f) ≠ 0.
     STATUS: OPEN (~5pp Lean, residue computation from factorization). -/
-def L_sym2_One_from_RS_Surface : Prop :=
-  RankinSelberg_SimplePoleat1_Surface RankinSelberg_L →
-  PeterssonNorm_Pos_Surface RankinSelberg_L L_sym2_143 →
+def L_sym2_One_from_RS_OPEN : Prop :=
+  RankinSelberg_SimplePoleat1_OPEN RankinSelberg_L →
+  PeterssonNorm_Pos_OPEN RankinSelberg_L L_sym2_143 →
   L_sym2_143 1 ≠ 0
 
-/-- L_143_NonZero_from_Sym2_Surface — sub-surface for main Residue Argument.
+/-- L_143_NonZero_from_Sym2_OPEN — sub-surface for main Residue Argument.
 
     L_sym2_143(1) ≠ 0 → L_143a1(1) ≠ 0.
     Mathematical content: non-vanishing of newform L-function at s=1.
@@ -98,7 +99,7 @@ def L_sym2_One_from_RS_Surface : Prop :=
     Reference: IK Thm 5.15; Bump "Automorphic Forms" §3.4.
     Lean gap: boundary non-vanishing for Euler products not in Mathlib v4.12.0.
     STATUS: OPEN (~10pp Lean, complex analysis at boundary). -/
-def L_143_NonZero_from_Sym2_Surface : Prop :=
+def L_143_NonZero_from_Sym2_OPEN : Prop :=
   L_sym2_143 1 ≠ 0 → L_143a1 1 ≠ 0
 
 /-! ── §2. Proved scaffold (0 sorry) ─────────────────────────────────── -/
@@ -124,23 +125,23 @@ theorem zeta_pole_at_one_prop :
     ring⟩
 
 /-- residue_argument_from_factorization (PROVED, 0 sorry):
-    Given the two sub-surfaces L_143_NonZero_from_Sym2_Surface and the hypothesis
+    Given the two sub-surfaces L_143_NonZero_from_Sym2_OPEN and the hypothesis
     L_sym2_143 1 ≠ 0: L_143a1 1 ≠ 0.
 
-    Proof: direct application of L_143_NonZero_from_Sym2_Surface h_sym2 hL.
+    Proof: direct application of L_143_NonZero_from_Sym2_OPEN h_sym2 hL.
     The mathematical content is in the sub-surface.
     SORRY: 0.  Classical trio. -/
 theorem residue_argument_from_factorization
     (L_sym2_143 : ℂ → ℂ)
-    (h_bridge : L_143_NonZero_from_Sym2_Surface L_sym2_143) :
-    Residue_Argument_Surface L_sym2_143 :=
+    (h_bridge : L_143_NonZero_from_Sym2_OPEN L_sym2_143) :
+    Residue_Argument_OPEN L_sym2_143 :=
   h_bridge
 
 /-- Reduction summary:
-    Residue_Argument_Surface (1 open surface, ~30pp total) is now:
-      → PeterssonNorm_Pos_Surface        (sub-surface 2a, ~5pp, cusp form norms)
+    Residue_Argument_OPEN (1 open surface, ~30pp total) is now:
+      → PeterssonNorm_Pos_OPEN        (sub-surface 2a, ~5pp, cusp form norms)
       → RankinSelberg_SimplePoleat1   (sub-surface 2b, ~15pp, RS L-functions)
-      → L_143_NonZero_from_Sym2_Surface (sub-surface 2c, ~10pp, boundary analysis)
+      → L_143_NonZero_from_Sym2_OPEN (sub-surface 2c, ~10pp, boundary analysis)
     zeta_pole_at_one_prop: PROVED (0 sorry, Mathlib riemannZeta).
     Grand scaffold: residue_argument_from_factorization: PROVED (0 sorry).
     SORRY: 0. -/

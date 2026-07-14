@@ -1,18 +1,18 @@
 /-
   ArakelovRH/Closure/EulerProductClosure.lean
-  Formal closure of CPS_EulerProduct_Surface (Surface 2 of Route B).
+  Formal closure of CPS_EulerProduct_OPEN (Surface 2 of Route B).
   Author: David Fox.  Opera Numerorum.  June 2026.
 
-  CPS_EulerProduct_Surface: ∀ s : ℂ, 3/2 < Re(s) → L_143a1 s ≠ 0.
+  CPS_EulerProduct_OPEN: ∀ s : ℂ, 3/2 < Re(s) → L_143a1 s ≠ 0.
 
   STRATEGY: Reduce to two atomic sub-surfaces:
-    (1) Deligne_AlphaFactorization_Surface (~25pp):
+    (1) Deligne_AlphaFactorization_OPEN (~25pp):
           for each prime p, the local Euler factor factors as
           (1 - α_p · p^{-s})(1 - β_p · p^{-s}) with |α_p|=|β_p|=√p.
           Mathematical reference: Deligne 1974 "La conjecture de Weil I".
           Lean gap: Hecke operator theory for Gamma_0(143) absent from Mathlib.
 
-    (2) EulerProduct_GlobalNonZero_Surface (~10pp):
+    (2) EulerProduct_GlobalNonZero_OPEN (~10pp):
           An infinite Euler product ∏_p f_p(s), where each local factor
           f_p(s) ≠ 0 and the product converges absolutely, is globally ≠ 0.
           Mathematical reference: Apostol "Modular Functions" §6.
@@ -27,7 +27,7 @@
   Only the GLOBAL step (infinite product → global non-vanishing) remains open.
 
   STATUS after this file:
-    CPS_EulerProduct_Surface REDUCED: 1 surface → 2 sub-surfaces.
+    CPS_EulerProduct_OPEN REDUCED: 1 surface → 2 sub-surfaces.
     Sub-surface (1): ~25pp of Lean (Hecke theory).
     Sub-surface (2): ~10pp of Lean (infinite product theory).
     Local step: CLOSED (0 sorry).
@@ -36,6 +36,7 @@
   Referee: #print axioms ArakelovRH.EulerProductClosure.euler_factor_nonzero_from_deligne
 -/
 
+import ArakelovRH.Scaffold.ConverseTheorem
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Analysis.SpecialFunctions.Complex.Circle
@@ -52,7 +53,7 @@ open ArakelovRH ArakelovRH.ConverseTheorem Complex Real
     Absent from Mathlib.  Introduced as variable; no opaque. -/
 variable (L_143a1_local : ℕ → ℂ → ℂ)
 
-/-- Deligne_AlphaFactorization_Surface — atomic sub-surface (1) for EulerProduct.
+/-- Deligne_AlphaFactorization_OPEN — atomic sub-surface (1) for EulerProduct.
 
     For weight-2 newform f_143a1 (Cremona 143a1, conductor 143), for each
     prime p there exist algebraic numbers α_p, β_p with:
@@ -67,7 +68,7 @@ variable (L_143a1_local : ℕ → ℂ → ℂ)
     gives local non-vanishing for all primes p.
     SORRY: 0 (named open surface, not a claimed theorem).
     STATUS: OPEN (~25pp Lean). -/
-def Deligne_AlphaFactorization_Surface : Prop :=
+def Deligne_AlphaFactorization_OPEN : Prop :=
   ∀ p : ℕ, p.Prime →
   ∃ (α_p β_p : ℂ),
     ‖α_p‖ = Real.sqrt p ∧
@@ -75,14 +76,14 @@ def Deligne_AlphaFactorization_Surface : Prop :=
     ∀ s : ℂ, L_143a1_local p s =
       (1 - α_p * (p : ℂ) ^ (-s)) * (1 - β_p * (p : ℂ) ^ (-s))
 
-/-- CpowNormFormula_Surface — norm of complex power of a prime.
+/-- CpowNormFormula_OPEN — norm of complex power of a prime.
 
     For p prime, s : ℂ: ‖(p : ℂ)^(-s)‖ = (p : ℝ)^(-s.re).
     Proof sketch: ‖(p:ℂ)^s‖ = Complex.abs((p:ℂ)^s) = (p:ℝ)^s.re
     via Complex.abs_cpow_of_pos (Mathlib), then negate exponent.
     This is a 2-line Lean proof pending exact API name in Mathlib v4.12.0.
     STATUS: OPEN (~2pp Lean, Mathlib API cleanup). -/
-def CpowNormFormula_Surface (p : ℕ) (s : ℂ) : Prop :=
+def CpowNormFormula_OPEN (p : ℕ) (s : ℂ) : Prop :=
   p.Prime → ‖(p : ℂ) ^ (-s)‖ = (p : ℝ) ^ (-s.re)
 
 /-! ── §2. Proved lemmas (0 sorry, classical trio) ────────────────────── -/
@@ -146,7 +147,7 @@ theorem alpha_norm_bound_from_formula
     This closes the LOCAL non-vanishing completely.
     SORRY: 0.  Classical trio. -/
 theorem euler_factor_nonzero_from_deligne
-    (h_del : Deligne_AlphaFactorization_Surface L_143a1_local)
+    (h_del : Deligne_AlphaFactorization_OPEN L_143a1_local)
     (h_cpow_α : ∀ (p : ℕ), p.Prime → ∀ s : ℂ, ‖(p : ℂ) ^ (-s)‖ = (p : ℝ) ^ (-s.re))
     (p : ℕ) (hp : p.Prime) (s : ℂ) (hs : (3 : ℝ) / 2 < s.re) :
     L_143a1_local p s ≠ 0 := by
@@ -160,7 +161,7 @@ theorem euler_factor_nonzero_from_deligne
 
 /-! ── §3. Sub-surface (2): global non-vanishing ─────────────────────── -/
 
-/-- EulerProduct_GlobalNonZero_Surface — atomic sub-surface (2) for EulerProduct.
+/-- EulerProduct_GlobalNonZero_OPEN — atomic sub-surface (2) for EulerProduct.
 
     Given that every local Euler factor L_143a1_local p s ≠ 0 (proved above),
     the global L-function L_143a1 s ≠ 0 for Re(s) > 3/2.
@@ -172,35 +173,35 @@ theorem euler_factor_nonzero_from_deligne
     Lean gap: `Nat.ArithmeticFunction.LSeries.eulerProduct` incomplete in
     Mathlib v4.12.0 for GL_2 L-functions with specific newform data.
     STATUS: OPEN (~10pp Lean, infinite product theory). -/
-def EulerProduct_GlobalNonZero_Surface : Prop :=
+def EulerProduct_GlobalNonZero_OPEN : Prop :=
   (∀ (p : ℕ), p.Prime → ∀ s : ℂ, (3:ℝ)/2 < s.re → L_143a1_local p s ≠ 0) →
   ∀ s : ℂ, (3:ℝ)/2 < s.re → L_143a1 s ≠ 0
 
 /-! ── §4. Grand closure theorem ─────────────────────────────────────── -/
 
 /-- cps_euler_product_closed (PROVED, 0 sorry):
-    CPS_EulerProduct_Surface follows from:
-      h_del  : Deligne_AlphaFactorization_Surface  (sub-surface 1, ~25pp)
+    CPS_EulerProduct_OPEN follows from:
+      h_del  : Deligne_AlphaFactorization_OPEN  (sub-surface 1, ~25pp)
       h_cpow : CpowNormFormula for all primes   (sub-surface 1a, ~2pp)
-      h_glob : EulerProduct_GlobalNonZero_Surface  (sub-surface 2, ~10pp)
+      h_glob : EulerProduct_GlobalNonZero_OPEN  (sub-surface 2, ~10pp)
 
     Proof: local non-vanishing proved by euler_factor_nonzero_from_deligne;
     global conclusion by h_glob.
     SORRY: 0.  Classical trio.
     Referee: #print axioms ArakelovRH.EulerProductClosure.cps_euler_product_closed -/
 theorem cps_euler_product_closed
-    (h_del  : Deligne_AlphaFactorization_Surface L_143a1_local)
+    (h_del  : Deligne_AlphaFactorization_OPEN L_143a1_local)
     (h_cpow : ∀ (p : ℕ), p.Prime → ∀ s : ℂ, ‖(p : ℂ) ^ (-s)‖ = (p : ℝ) ^ (-s.re))
-    (h_glob : EulerProduct_GlobalNonZero_Surface L_143a1_local) :
-    CPS_EulerProduct_Surface :=
+    (h_glob : EulerProduct_GlobalNonZero_OPEN L_143a1_local) :
+    CPS_EulerProduct_OPEN :=
   h_glob (fun p hp s hs =>
     euler_factor_nonzero_from_deligne L_143a1_local h_del h_cpow p hp s hs)
 
 /-- Reduction summary:
-    CPS_EulerProduct_Surface (1 open surface, ~35pp total) is now:
-      → Deligne_AlphaFactorization_Surface  (sub-surface 1, ~25pp, Hecke theory)
-      → CpowNormFormula_Surface             (sub-surface 1a, ~2pp, Mathlib API)
-      → EulerProduct_GlobalNonZero_Surface  (sub-surface 2, ~10pp, infinite products)
+    CPS_EulerProduct_OPEN (1 open surface, ~35pp total) is now:
+      → Deligne_AlphaFactorization_OPEN  (sub-surface 1, ~25pp, Hecke theory)
+      → CpowNormFormula_OPEN             (sub-surface 1a, ~2pp, Mathlib API)
+      → EulerProduct_GlobalNonZero_OPEN  (sub-surface 2, ~10pp, infinite products)
     Local non-vanishing: FULLY PROVED (0 sorry).
     SORRY: 0. -/
 theorem euler_product_reduction_complete : True := True.intro

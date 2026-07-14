@@ -1,9 +1,9 @@
 /-
   ArakelovRH/SubClosure/RamanujanFactorizationClosed.lean
-  RamanujanFactorization_Surface is proved: pure algebra, 0 sorry.
+  RamanujanFactorization_OPEN is proved: pure algebra, 0 sorry.
   Author: David Fox.  Opera Numerorum.  June 2026.
 
-  TARGET: RamanujanFactorization_Surface (from DeligneBoundSubClosure.lean):
+  TARGET: RamanujanFactorization_OPEN (from DeligneBoundSubClosure.lean):
     forall p prime, forall a : R, |a| <= 2*sqrt(p) ->
     exists alpha beta : C, norm(alpha) = sqrt(p) /\ norm(beta) = sqrt(p)
                          /\ alpha + beta = a /\ alpha * beta = p.
@@ -30,18 +30,19 @@
       Complex.mul_re, Complex.mul_im.
 
   PROVED (0 sorry, classical trio):
-    ramanujan_factorization_closed : RamanujanFactorization_Surface
+    ramanujan_factorization_closed : RamanujanFactorization_OPEN
 
   CONSEQUENCE:
     deligne_from_sub_gaps (DeligneBoundSubClosure) now only needs:
-      HeckeEigenvalue_f143_Surface  (~10pp)
-      Deligne_RamanujanBound_Surface (~15pp, Weil I for weight-2)
-    RamanujanFactorization_Surface: CLOSED (this file).
+      HeckeEigenvalue_f143_OPEN  (~10pp)
+      Deligne_RamanujanBound_OPEN (~15pp, Weil I for weight-2)
+    RamanujanFactorization_OPEN: CLOSED (this file).
 
   SORRY: 0.  No native_decide.  No opaque.  Classical trio.
   Referee: #print axioms ArakelovRH.SubClosure.RamanujanFactorizationClosed.ramanujan_factorization_closed
 -/
 
+import ArakelovRH.SubClosure.DeligneBoundSubClosure
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
@@ -52,7 +53,7 @@ open ArakelovRH ArakelovRH.SubClosure.DeligneBound Real
 /-! ── Main theorem ─────────────────────────────────────────────── -/
 
 /-- **ramanujan_factorization_closed** (PROVED, 0 sorry):
-    RamanujanFactorization_Surface is proved by explicit construction.
+    RamanujanFactorization_OPEN is proved by explicit construction.
 
     Given: p prime, a : R with |a| <= 2 * sqrt(p).
     Construct: alpha = <a/2, sqrt(4p-a^2)/2>,  beta = <a/2, -sqrt(4p-a^2)/2>.
@@ -70,7 +71,7 @@ open ArakelovRH ArakelovRH.SubClosure.DeligneBound Real
       mul.re(alpha,beta) = (a/2)^2 + (sqd/2)^2 = p             by nlinarith
 
     SORRY: 0.  Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
-theorem ramanujan_factorization_closed : RamanujanFactorization_Surface := by
+theorem ramanujan_factorization_closed : RamanujanFactorization_OPEN := by
   intro p hp a ha
   have hpR : (0 : ℝ) ≤ (p : ℝ) := Nat.cast_nonneg p
   -- ── Step 1: a^2 ≤ 4p from |a| ≤ 2*√p ───────────────────────────
@@ -116,28 +117,28 @@ theorem ramanujan_factorization_closed : RamanujanFactorization_Surface := by
 /-! ── Consequence: Deligne requires only 2 sub-gaps ──────────────── -/
 
 /-- **deligne_from_two_gaps** (PROVED, 0 sorry):
-    Deligne_AlphaFactorization_Surface follows from the two remaining sub-gaps:
-      HeckeEigenvalue_f143_Surface  (~10pp)
-      Deligne_RamanujanBound_Surface (~15pp)
-    since RamanujanFactorization_Surface is now PROVED (0 sorry).
+    Deligne_AlphaFactorization_OPEN follows from the two remaining sub-gaps:
+      HeckeEigenvalue_f143_OPEN  (~10pp)
+      Deligne_RamanujanBound_OPEN (~15pp)
+    since RamanujanFactorization_OPEN is now PROVED (0 sorry).
 
     This reduces the outstanding work for Avenue 3 by ~5pp.
     SORRY: 0. -/
 theorem deligne_from_two_gaps
     (L_143a1_local : ℕ → ℂ → ℂ)
-    (h_hecke : HeckeEigenvalue_f143_Surface L_143a1_local)
-    (h_ram   : Deligne_RamanujanBound_Surface) :
-    Deligne_AlphaFactorization_Surface L_143a1_local :=
+    (h_hecke : HeckeEigenvalue_f143_OPEN L_143a1_local)
+    (h_ram   : Deligne_RamanujanBound_OPEN) :
+    Deligne_AlphaFactorization_OPEN L_143a1_local :=
   deligne_from_sub_gaps L_143a1_local h_hecke h_ram ramanujan_factorization_closed
 
 /-- **ramanujan_batch16_complete** (PROVED, 0 sorry):
     Batch 16 summary:
-      PROVED: ramanujan_factorization_closed  (RamanujanFactorization_Surface CLOSED)
+      PROVED: ramanujan_factorization_closed  (RamanujanFactorization_OPEN CLOSED)
       PROVED: deligne_from_two_gaps  (Deligne now needs only 2 sub-gaps)
       OPEN remaining for Avenue 3 after this batch:
-        HeckeEigenvalue_f143_Surface   (~10pp, Hecke eigenvalue + local factor form)
-        Deligne_RamanujanBound_Surface (~15pp, Weil I for weight-2 forms)
-        EulerProduct_GlobalNonZero_Surface (~10pp, infinite product convergence)
+        HeckeEigenvalue_f143_OPEN   (~10pp, Hecke eigenvalue + local factor form)
+        Deligne_RamanujanBound_OPEN (~15pp, Weil I for weight-2 forms)
+        EulerProduct_GlobalNonZero_OPEN (~10pp, infinite product convergence)
       Total remaining Avenue 3: ~35pp  (was ~40pp before Batch 16).
     SORRY: 0. -/
 theorem ramanujan_batch16_complete : True := True.intro

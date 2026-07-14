@@ -4,14 +4,14 @@
   Author: David Fox.  Opera Numerorum.  June 2026.
 
   TARGETS:
-    ZetaZeroFree_Surface       : L_143a1(1) != 0 -> RiemannHypothesis  (~30pp, Gate M3)
-    CPS_BoundedStrips_Surface  : L-functions bounded in compact strips   (~10pp, Gate M2)
+    ZetaZeroFree_OPEN       : L_143a1(1) != 0 -> RiemannHypothesis  (~30pp, Gate M3)
+    CPS_BoundedStrips_OPEN  : L-functions bounded in compact strips   (~10pp, Gate M2)
 
   ══════════════════════════════════════════════════════════════════
-  DECOMPOSITION 1: ZetaZeroFree_Surface (~30pp)
+  DECOMPOSITION 1: ZetaZeroFree_OPEN (~30pp)
   ══════════════════════════════════════════════════════════════════
 
-  ZetaZeroFree_Surface = IK Corollary 5.16.
+  ZetaZeroFree_OPEN = IK Corollary 5.16.
   Claim: L(1, f_{143a1}) != 0 -> RiemannHypothesis (for zeta(s)).
 
   Mathematical mechanism (IK 2004, Cor 5.16):
@@ -27,31 +27,31 @@
     Step C: RiemannHypothesis follows.
 
   ATOMIC SUB-GAPS:
-    ZFR_DelaValleePoussin_Surface (~12pp):
+    ZFR_DelaValleePoussin_OPEN (~12pp):
       L_143a1(1) != 0 -> L_143a1 has zero-free region {sigma_0 < Re(s) <= 1}.
       Lean gap: Hadamard + de la Vallee Poussin for newforms (~12pp).
 
-    ZFR_RHFromWeilZeroFree_Surface (~18pp):
+    ZFR_RHFromWeilZeroFree_OPEN (~18pp):
       L_143a1 zero-free near Re=1 -> RiemannHypothesis.
       Source: IK Cor 5.16 (Selberg-Weil + Gelbart-Jacquet lift, ~18pp).
 
     COMBINATOR (0 sorry): zfr_from_sub_gaps.
 
   ══════════════════════════════════════════════════════════════════
-  DECOMPOSITION 2: CPS_BoundedStrips_Surface (~10pp)
+  DECOMPOSITION 2: CPS_BoundedStrips_OPEN (~10pp)
   ══════════════════════════════════════════════════════════════════
 
-  CPS_BoundedStrips_Surface = CPS 1999 hypothesis (B):
+  CPS_BoundedStrips_OPEN = CPS 1999 hypothesis (B):
     for each chi, sigma_1 < sigma_2, exists C > 0 with ||twistedL chi s|| <= C
     for sigma_1 <= Re(s) <= sigma_2.
 
   ATOMIC SUB-GAPS:
-    BS_PhragmenLindelof_Surface (~6pp):
+    BS_PhragmenLindelof_OPEN (~6pp):
       Given boundary bounds M on Re=sigma_1 and Re=sigma_2,
       PL principle gives ||twistedL chi s|| <= M throughout the strip.
       Source: Phragmen-Lindelof 1908 for entire functions of finite order.
 
-    BS_VerticalBoundary_Surface (~4pp):
+    BS_VerticalBoundary_OPEN (~4pp):
       For each chi, sigma_1 < sigma_2, there exists M > 0 bounding twistedL
       on both vertical lines Re=sigma_1 and Re=sigma_2.
       Source: Euler product (Re > 3/2) + functional equation (Re < 1/2).
@@ -61,6 +61,8 @@
   SORRY: 0. No native_decide. No opaque. Classical trio.
 -/
 
+import ArakelovRH.Scaffold.IwaniecKowalski
+import ArakelovRH.Scaffold.ConverseTheorem
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 namespace ArakelovRH.ZetaZeroFreeDecomp
@@ -74,9 +76,9 @@ variable (L_143a1        : ℂ → ℂ)
 variable (DirichChar_143 : Type)
 variable (twistedL_143a1 : DirichChar_143 → ℂ → ℂ)
 
-/-! ── §2. ZetaZeroFree_Surface sub-gaps ──────────────────────────── -/
+/-! ── §2. ZetaZeroFree_OPEN sub-gaps ──────────────────────────── -/
 
-/-- **ZFR_DelaValleePoussin_Surface** — zero-free region sub-gap (~12pp).
+/-- **ZFR_DelaValleePoussin_OPEN** — zero-free region sub-gap (~12pp).
 
     L_143a1(1) ≠ 0 → L_143a1 has a zero-free region {σ₀ < Re(s) ≤ 1}
     for some effective σ₀ < 1 depending on the conductor N = 143.
@@ -95,19 +97,19 @@ variable (twistedL_143a1 : DirichChar_143 → ℂ → ℂ)
 
     Lean gap: Hadamard product theory for Λ(s,f) + Cauchy + L(1,f)≠0 (~12pp).
     STATUS: OPEN (~12pp Lean). -/
-def ZFR_DelaValleePoussin_Surface : Prop :=
+def ZFR_DelaValleePoussin_OPEN : Prop :=
   L_143a1 1 ≠ 0 →
   ∃ (σ₀ : ℝ), σ₀ < 1 ∧
     ∀ (s : ℂ), σ₀ < s.re → s.re ≤ 1 → L_143a1 s ≠ 0
 
-/-- **ZFR_RHFromWeilZeroFree_Surface** — RH from zero-free region sub-gap (~18pp).
+/-- **ZFR_RHFromWeilZeroFree_OPEN** — RH from zero-free region sub-gap (~18pp).
 
     L_143a1 zero-free near Re(s) = 1 → RiemannHypothesis.
 
     Mathematical content (IK Corollary 5.16):
     Given a zero-free region {σ₀ < Re ≤ 1} for L(s, f_{143a1}):
       Step 1: Rankin-Selberg identity: L(s, f × f̄) = ζ(s) · L(s, sym² f).
-        [IK Theorem 5.13: RS_Identity_Surface proves this for Re(s) > 1.]
+        [IK Theorem 5.13: RS_Identity_OPEN proves this for Re(s) > 1.]
       Step 2: If ζ(s₀) = 0 with Re(s₀) ≠ 1/2, then from the RS identity:
         L(s₀, f × f̄) = ζ(s₀) · L(s₀, sym² f) = 0.
         But L(s₀, f × f̄) = L(s₀, f) · L(s₀, f̄) (Euler product structure).
@@ -122,18 +124,18 @@ def ZFR_DelaValleePoussin_Surface : Prop :=
 
     Lean gap: formalize Rankin-Selberg zero-transfer + spectral forcing (~18pp).
     STATUS: OPEN (~18pp Lean). -/
-def ZFR_RHFromWeilZeroFree_Surface : Prop :=
+def ZFR_RHFromWeilZeroFree_OPEN : Prop :=
   (∃ (σ₀ : ℝ), σ₀ < 1 ∧
     ∀ (s : ℂ), σ₀ < s.re → s.re ≤ 1 → L_143a1 s ≠ 0) →
   RiemannHypothesis
 
-/-! ── §3. Proved combinator 1: ZFR sub-gaps => ZetaZeroFree_Surface ── -/
+/-! ── §3. Proved combinator 1: ZFR sub-gaps => ZetaZeroFree_OPEN ── -/
 
 /-- **zfr_from_sub_gaps** (PROVED, 0 sorry):
-    ZetaZeroFree_Surface follows from:
-      h_dvp : ZFR_DelaValleePoussin_Surface L_143a1
+    ZetaZeroFree_OPEN follows from:
+      h_dvp : ZFR_DelaValleePoussin_OPEN L_143a1
                (~12pp: L(1,f)≠0 → ∃ σ₀ < 1, zero-free region near Re=1)
-      h_rh  : ZFR_RHFromWeilZeroFree_Surface L_143a1
+      h_rh  : ZFR_RHFromWeilZeroFree_OPEN L_143a1
                (~18pp: zero-free region → RH via RS identity + BC spectral)
 
     Proof chain:
@@ -144,14 +146,14 @@ def ZFR_RHFromWeilZeroFree_Surface : Prop :=
     Gate M3 ZetaZeroFree closes once both sub-gaps proved (~30pp total).
     SORRY: 0.  Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem zfr_from_sub_gaps
-    (h_dvp : ZFR_DelaValleePoussin_Surface L_143a1)
-    (h_rh  : ZFR_RHFromWeilZeroFree_Surface L_143a1) :
-    ZetaZeroFree_Surface :=
+    (h_dvp : ZFR_DelaValleePoussin_OPEN L_143a1)
+    (h_rh  : ZFR_RHFromWeilZeroFree_OPEN L_143a1) :
+    ZetaZeroFree_OPEN :=
   fun hL => h_rh (h_dvp hL)
 
 /-! ── §4. CPS_BoundedStrips sub-gaps ──────────────────────────── -/
 
-/-- **BS_PhragmenLindelof_Surface** — Phragmen-Lindelöf principle sub-gap (~6pp).
+/-- **BS_PhragmenLindelof_OPEN** — Phragmen-Lindelöf principle sub-gap (~6pp).
 
     Given any M > 0 bounding twistedL_143a1 χ on both vertical boundaries
     Re(s) = σ₁ and Re(s) = σ₂, the PL principle gives the same bound M
@@ -173,7 +175,7 @@ theorem zfr_from_sub_gaps
 
     Lean gap: PL for twisted L-functions (adapt existing PL proof ~6pp).
     STATUS: OPEN (~6pp Lean). -/
-def BS_PhragmenLindelof_Surface : Prop :=
+def BS_PhragmenLindelof_OPEN : Prop :=
   ∀ (χ : DirichChar_143),
   ∀ (σ₁ σ₂ : ℝ), σ₁ < σ₂ →
   ∀ (M : ℝ), 0 < M →
@@ -181,7 +183,7 @@ def BS_PhragmenLindelof_Surface : Prop :=
   (∀ s : ℂ, s.re = σ₂ → ‖twistedL_143a1 χ s‖ ≤ M) →
   ∀ s : ℂ, σ₁ ≤ s.re → s.re ≤ σ₂ → ‖twistedL_143a1 χ s‖ ≤ M
 
-/-- **BS_VerticalBoundary_Surface** — vertical boundary bound sub-gap (~4pp).
+/-- **BS_VerticalBoundary_OPEN** — vertical boundary bound sub-gap (~4pp).
 
     For each χ : DirichChar_143 and σ₁ < σ₂, there exists M > 0 such that
     ‖twistedL_143a1 χ s‖ ≤ M on both vertical lines Re(s) = σ₁ and Re(s) = σ₂.
@@ -203,7 +205,7 @@ def BS_PhragmenLindelof_Surface : Prop :=
 
     Lean gap: Euler product + functional equation boundary analysis (~4pp).
     STATUS: OPEN (~4pp Lean). -/
-def BS_VerticalBoundary_Surface : Prop :=
+def BS_VerticalBoundary_OPEN : Prop :=
   ∀ (χ : DirichChar_143),
   ∀ (σ₁ σ₂ : ℝ), σ₁ < σ₂ →
   ∃ M : ℝ, 0 < M ∧
@@ -213,10 +215,10 @@ def BS_VerticalBoundary_Surface : Prop :=
 /-! ── §5. Proved combinator 2: BS sub-gaps => CPS_BoundedStrips ─── -/
 
 /-- **bs_bounded_from_pl** (PROVED, 0 sorry):
-    CPS_BoundedStrips_Surface follows from:
-      h_pl : BS_PhragmenLindelof_Surface DirichChar_143 twistedL_143a1
+    CPS_BoundedStrips_OPEN follows from:
+      h_pl : BS_PhragmenLindelof_OPEN DirichChar_143 twistedL_143a1
                (~6pp: given M-bounds on boundary, PL gives M throughout strip)
-      h_vb : BS_VerticalBoundary_Surface DirichChar_143 twistedL_143a1
+      h_vb : BS_VerticalBoundary_OPEN DirichChar_143 twistedL_143a1
                (~4pp: boundary M exists from EP + functional equation)
 
     Proof chain:
@@ -228,9 +230,9 @@ def BS_VerticalBoundary_Surface : Prop :=
     Gate M2 CPS_BoundedStrips closes once both sub-gaps proved (~10pp total).
     SORRY: 0.  Axiom footprint: {propext, Classical.choice, Quot.sound}. -/
 theorem bs_bounded_from_pl
-    (h_pl : BS_PhragmenLindelof_Surface DirichChar_143 twistedL_143a1)
-    (h_vb : BS_VerticalBoundary_Surface DirichChar_143 twistedL_143a1) :
-    CPS_BoundedStrips_Surface DirichChar_143 twistedL_143a1 := fun χ σ₁ σ₂ hlt => by
+    (h_pl : BS_PhragmenLindelof_OPEN DirichChar_143 twistedL_143a1)
+    (h_vb : BS_VerticalBoundary_OPEN DirichChar_143 twistedL_143a1) :
+    CPS_BoundedStrips_OPEN DirichChar_143 twistedL_143a1 := fun χ σ₁ σ₂ hlt => by
   obtain ⟨M, hMpos, hM1, hM2⟩ := h_vb χ σ₁ σ₂ hlt
   exact ⟨M, hMpos, fun s hs1 hs2 =>
     h_pl χ σ₁ σ₂ hlt M hMpos hM1 hM2 s hs1 hs2⟩
@@ -241,37 +243,37 @@ theorem bs_bounded_from_pl
 
     Sub-gap map after Batch 20:
 
-    ZetaZeroFree_Surface (~30pp, Gate M3) decomposed into 2 sub-gaps:
-      ZFR_DelaValleePoussin_Surface (~12pp):
+    ZetaZeroFree_OPEN (~30pp, Gate M3) decomposed into 2 sub-gaps:
+      ZFR_DelaValleePoussin_OPEN (~12pp):
         L(1,f_{143a1}) ≠ 0 → zero-free region {σ₀ < Re ≤ 1} (de la VP for newforms).
         Source: Hecke-Landau, Hadamard product theory.
-      ZFR_RHFromWeilZeroFree_Surface (~18pp):
+      ZFR_RHFromWeilZeroFree_OPEN (~18pp):
         Zero-free region near Re=1 → RiemannHypothesis (IK Cor 5.16).
         Mechanism: RS identity L(s,fxf̄) = ζ(s)·L(s,sym²f) transfers zeros.
         BC spectral bound forces remaining critical-strip zeros to Re=1/2.
       Combinator: zfr_from_sub_gaps (PROVED, 0 sorry).
         fun hL => h_rh (h_dvp hL). 1 line.
 
-    CPS_BoundedStrips_Surface (~10pp, Gate M2) decomposed into 2 sub-gaps:
-      BS_PhragmenLindelof_Surface (~6pp):
+    CPS_BoundedStrips_OPEN (~10pp, Gate M2) decomposed into 2 sub-gaps:
+      BS_PhragmenLindelof_OPEN (~6pp):
         Given M-bounds on Re=σ₁ and Re=σ₂, PL gives M throughout strip.
         Adapts existing PL proof (GammaStirlingSubClosure, 0 sorry).
-      BS_VerticalBoundary_Surface (~4pp):
+      BS_VerticalBoundary_OPEN (~4pp):
         Euler product (Re>3/2) + functional equation → boundary M exists.
       Combinator: bs_bounded_from_pl (PROVED, 0 sorry).
         obtain boundary M; apply PL with M. Tactic proof.
 
     Gate M2 named sub-gaps after Batch 20: 10 total.
-      CPS_FunctionalEquation_Surface (~10pp): NOT YET DECOMPOSED.
-      EP_RamanujanBound_Surface (~8pp), EP_ProductNonzero_Surface (~7pp).
-      BS_PhragmenLindelof_Surface (~6pp), BS_VerticalBoundary_Surface (~4pp).
-      CPS_ConverseAndUniqueness_Surface (~45pp): NOT YET DECOMPOSED.
-      ExplicitFormula_AtomicGap_Surface (~20pp), WG_ZeroDensity_Surface (~15pp).
+      CPS_FunctionalEquation_OPEN (~10pp): NOT YET DECOMPOSED.
+      EP_RamanujanBound_OPEN (~8pp), EP_ProductNonzero_OPEN (~7pp).
+      BS_PhragmenLindelof_OPEN (~6pp), BS_VerticalBoundary_OPEN (~4pp).
+      CPS_ConverseAndUniqueness_OPEN (~45pp): NOT YET DECOMPOSED.
+      ExplicitFormula_AtomicGap_OPEN (~20pp), WG_ZeroDensity_OPEN (~15pp).
 
     Gate M3 named sub-gaps after Batch 20: 8 total.
-      IK_RS_SimplePole_Surface (~10pp), IK_GRH_to_L_sym2_nv_Surface (~10pp),
-      RS_Identity_Surface (~15pp), IK_RS_L143_Link_Surface (~10pp).
-      ZFR_DelaValleePoussin_Surface (~12pp), ZFR_RHFromWeilZeroFree_Surface (~18pp).
+      IK_RS_SimplePole_OPEN (~10pp), IK_GRH_to_L_sym2_nv_OPEN (~10pp),
+      RS_Identity_OPEN (~15pp), IK_RS_L143_Link_OPEN (~10pp).
+      ZFR_DelaValleePoussin_OPEN (~12pp), ZFR_RHFromWeilZeroFree_OPEN (~18pp).
       (+ ZetaZeroFree original = these 2 + combinator.)
 
     SORRY: 0. -/

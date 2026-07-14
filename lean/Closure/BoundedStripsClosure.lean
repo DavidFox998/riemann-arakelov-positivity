@@ -1,9 +1,9 @@
 /-
   ArakelovRH/Closure/BoundedStripsClosure.lean
-  Formal closure of CPS_BoundedStrips_Surface (Surface 3 of Route B).
+  Formal closure of CPS_BoundedStrips_OPEN (Surface 3 of Route B).
   Author: David Fox.  Opera Numerorum.  June 2026.
 
-  CPS_BoundedStrips_Surface:
+  CPS_BoundedStrips_OPEN:
     ∀ χ : DirichChar_143, ∀ σ₁ σ₂ : ℝ, σ₁ < σ₂ →
     ∃ C : ℝ, 0 < C ∧ ∀ s : ℂ, σ₁ ≤ Re(s) ≤ σ₂ → ‖twistedL_143a1 χ s‖ ≤ C.
 
@@ -18,13 +18,13 @@
         applied between case (A) bound and case (B) bound.
 
   STRATEGY: Reduce to three atomic sub-surfaces:
-    (1) DirichletSeries_AbsoluteConvergence_Surface (~10pp):
+    (1) DirichletSeries_AbsoluteConvergence_OPEN (~10pp):
           Σ |a_n(f)| n^{-s} converges absolutely for Re(s) > 3/2
           (from Deligne bound |a_p| ≤ 2√p).
-    (2) TwistFunctionalEquation_Surface (~20pp):
+    (2) TwistFunctionalEquation_OPEN (~20pp):
           For each χ, twisted L(s,f,χ) satisfies functional equation.
-          (Same as CPS_FunctionalEquation_Surface — re-stated for strips context.)
-    (3) GammaFactor_VerticalGrowth_Surface (~10pp):
+          (Same as CPS_FunctionalEquation_OPEN — re-stated for strips context.)
+    (3) GammaFactor_VerticalGrowth_OPEN (~10pp):
           |Γ(s+k)| ≤ C·|Im(s)|^{Re(s)+k-1/2} · exp(-π|Im(s)|/2)
           (Stirling's formula for Gamma in vertical strips; standard analysis).
 
@@ -33,15 +33,16 @@
     bounded_strips_from_three_surfaces: grand closure scaffold
 
   STATUS after this file:
-    CPS_BoundedStrips_Surface REDUCED: 1 surface → 3 sub-surfaces.
+    CPS_BoundedStrips_OPEN REDUCED: 1 surface → 3 sub-surfaces.
     Sub-surface (1): ~10pp (Dirichlet series absolute convergence).
-    Sub-surface (2): ~20pp (functional equations — shared with CPS_FE_Surface).
+    Sub-surface (2): ~20pp (functional equations — shared with CPS_FE_OPEN).
     Sub-surface (3): ~10pp (Gamma factor growth, Stirling).
 
   SORRY: 0.  No axiom.  No native_decide.  No opaque.  Classical trio.
   Referee: #print axioms ArakelovRH.BoundedStripsClosure.bounded_strips_from_three_surfaces
 -/
 
+import ArakelovRH.Scaffold.ConverseTheorem
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Topology.Algebra.Order.LiminfLimsup
@@ -57,7 +58,7 @@ variable (newform_143a1_L : ℂ → ℂ)
 variable (twistedL_143a1 : DirichChar_143 → ℂ → ℂ)
 variable (a_n_143 : ℕ → ℂ)  -- Fourier coefficients of f_143a1
 
-/-- DirichletSeries_AbsConverge_Surface — sub-surface (1).
+/-- DirichletSeries_AbsConverge_OPEN — sub-surface (1).
 
     The Dirichlet series Σ a_n(f_143) n^{-s} converges absolutely
     for Re(s) > 3/2, uniformly on compact subsets of {Re(s) > 3/2}.
@@ -67,12 +68,12 @@ variable (a_n_143 : ℕ → ℂ)  -- Fourier coefficients of f_143a1
     Lean gap: requires L-series absolute convergence in Mathlib; partial
     support in `Nat.ArithmeticFunction.LSeries`.
     STATUS: OPEN (~10pp Lean). -/
-def DirichletSeries_AbsConverge_Surface : Prop :=
+def DirichletSeries_AbsConverge_OPEN : Prop :=
   ∀ σ₀ : ℝ, (3:ℝ)/2 < σ₀ →
   ∃ C : ℝ, 0 < C ∧
   ∀ χ : DirichChar_143, ∀ s : ℂ, σ₀ ≤ s.re → ‖twistedL_143a1 χ s‖ ≤ C
 
-/-- GammaFactor_VerticalGrowth_Surface — sub-surface (3).
+/-- GammaFactor_VerticalGrowth_OPEN — sub-surface (3).
 
     For the completed L-function Λ(s,f,χ) = (conductor)^{s/2} (2π)^{-s} Γ(s) L(s,f,χ),
     the Gamma factor satisfies Stirling bounds in vertical strips:
@@ -82,13 +83,13 @@ def DirichletSeries_AbsConverge_Surface : Prop :=
     Mathematical reference: Stein-Shakarchi §6.1; IK §5.1.
     Lean gap: Stirling-type Gamma bounds not in Mathlib v4.12.0.
     STATUS: OPEN (~10pp Lean, complex Gamma asymptotics). -/
-def GammaFactor_VerticalGrowth_Surface : Prop :=
+def GammaFactor_VerticalGrowth_OPEN : Prop :=
   ∀ σ₁ σ₂ : ℝ, σ₁ < σ₂ →
   ∃ C : ℝ, 0 < C ∧
   ∀ s : ℂ, σ₁ ≤ s.re → s.re ≤ σ₂ →
     ‖Complex.Gamma s‖ ≤ C * (1 + Complex.abs s.im) * Real.exp (-Real.pi * Complex.abs s.im / 2)
 
-/-- PhragmenLindelof_Strip_Surface — sub-surface (PL).
+/-- PhragmenLindelof_Strip_OPEN — sub-surface (PL).
 
     Phragmén-Lindelöf convexity principle for the strip σ₁ ≤ Re(s) ≤ σ₂:
     If f is holomorphic in the strip, bounded on vertical lines Re(s)=σ₁
@@ -96,7 +97,7 @@ def GammaFactor_VerticalGrowth_Surface : Prop :=
     throughout the closed strip.
     Mathlib has `Complex.PhragmenLindelof.horizontal_strip` (partial).
     STATUS: OPEN (~5pp Lean, apply Mathlib Phragmén-Lindelöf). -/
-def PhragmenLindelof_Strip_Surface
+def PhragmenLindelof_Strip_OPEN
     (f : ℂ → ℂ) (σ₁ σ₂ : ℝ) (B : ℝ) : Prop :=
   (∀ s : ℂ, σ₁ ≤ s.re → s.re ≤ σ₂ → ‖f s‖ ≤ B * (1 + Complex.abs s.im) ^ (1 : ℝ)) →
   ∃ C : ℝ, 0 < C ∧ ∀ s : ℂ, σ₁ ≤ s.re → s.re ≤ σ₂ → ‖f s‖ ≤ C
@@ -107,9 +108,9 @@ def PhragmenLindelof_Strip_Surface
     If the Dirichlet series converges absolutely and uniformly on
     {Re(s) ≥ σ₀ + ε} for some ε > 0, then it is bounded on
     any compact strip {σ₁ ≤ Re(s) ≤ σ₂} with σ₁ ≥ σ₀ + ε.
-    Proof: take C from DirichletSeries_AbsConverge_Surface with σ₀ := σ₁. -/
+    Proof: take C from DirichletSeries_AbsConverge_OPEN with σ₀ := σ₁. -/
 theorem compact_strip_from_abs_conv
-    (h_abs : DirichletSeries_AbsConverge_Surface DirichChar_143 twistedL_143a1)
+    (h_abs : DirichletSeries_AbsConverge_OPEN DirichChar_143 twistedL_143a1)
     (σ₁ σ₂ : ℝ) (hσ : (3:ℝ)/2 < σ₁) :
     ∃ C : ℝ, 0 < C ∧
     ∀ χ : DirichChar_143, ∀ s : ℂ, σ₁ ≤ s.re → s.re ≤ σ₂ → ‖twistedL_143a1 χ s‖ ≤ C := by
@@ -117,10 +118,10 @@ theorem compact_strip_from_abs_conv
   exact ⟨C, hC, fun χ s hs1 _ => hbound χ s hs1⟩
 
 /-- bounded_strips_from_three_surfaces (PROVED, 0 sorry):
-    CPS_BoundedStrips_Surface follows from:
-      h_abs  : DirichletSeries_AbsConverge_Surface   (sub-surface 1, ~10pp)
-      h_fe   : CPS_FunctionalEquation_Surface         (surface 2, shared with CPS_FE)
-      h_gam  : GammaFactor_VerticalGrowth_Surface     (sub-surface 3, ~10pp)
+    CPS_BoundedStrips_OPEN follows from:
+      h_abs  : DirichletSeries_AbsConverge_OPEN   (sub-surface 1, ~10pp)
+      h_fe   : CPS_FunctionalEquation_OPEN         (surface 2, shared with CPS_FE)
+      h_gam  : GammaFactor_VerticalGrowth_OPEN     (sub-surface 3, ~10pp)
       h_pl   : PhragmenLindelof for twisted L-functions (~5pp)
 
     Proof sketch:
@@ -132,12 +133,12 @@ theorem compact_strip_from_abs_conv
     invokes one of the three sub-surfaces.
     SORRY: 0.  Classical trio. -/
 theorem bounded_strips_from_three_surfaces
-    (h_abs : DirichletSeries_AbsConverge_Surface DirichChar_143 twistedL_143a1)
-    (h_fe  : CPS_FunctionalEquation_Surface DirichChar_143 twistedL_143a1)
-    (h_gam : GammaFactor_VerticalGrowth_Surface)
+    (h_abs : DirichletSeries_AbsConverge_OPEN DirichChar_143 twistedL_143a1)
+    (h_fe  : CPS_FunctionalEquation_OPEN DirichChar_143 twistedL_143a1)
+    (h_gam : GammaFactor_VerticalGrowth_OPEN)
     (h_pl  : ∀ (χ : DirichChar_143) (σ₁ σ₂ B : ℝ),
-               PhragmenLindelof_Strip_Surface (twistedL_143a1 χ) σ₁ σ₂ B) :
-    CPS_BoundedStrips_Surface DirichChar_143 twistedL_143a1 := by
+               PhragmenLindelof_Strip_OPEN (twistedL_143a1 χ) σ₁ σ₂ B) :
+    CPS_BoundedStrips_OPEN DirichChar_143 twistedL_143a1 := by
   intro χ σ₁ σ₂ hσ
   by_cases hright : (3:ℝ)/2 < σ₁
   · -- Case: σ₁ > 3/2.  Absolute convergence gives the bound.
@@ -164,11 +165,11 @@ theorem bounded_strips_from_three_surfaces
     exact ⟨C_pl, hCpl, fun s hs1 hs2 => hpl s hs1 hs2⟩
 
 /-- Reduction summary:
-    CPS_BoundedStrips_Surface (1 surface, ~35pp total) is now:
-      → DirichletSeries_AbsConverge_Surface    (~10pp, Dirichlet series theory)
-      → CPS_FunctionalEquation_Surface         (shared surface 2, ~20pp)
-      → GammaFactor_VerticalGrowth_Surface     (~10pp, Stirling for Gamma)
-      → PhragmenLindelof_Strip_Surface         (~5pp, apply Mathlib PL theorem)
+    CPS_BoundedStrips_OPEN (1 surface, ~35pp total) is now:
+      → DirichletSeries_AbsConverge_OPEN    (~10pp, Dirichlet series theory)
+      → CPS_FunctionalEquation_OPEN         (shared surface 2, ~20pp)
+      → GammaFactor_VerticalGrowth_OPEN     (~10pp, Stirling for Gamma)
+      → PhragmenLindelof_Strip_OPEN         (~5pp, apply Mathlib PL theorem)
     compact_strip_from_abs_conv: PROVED (0 sorry).
     bounded_strips_from_three_surfaces: PROVED (0 sorry).
     SORRY: 0. -/

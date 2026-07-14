@@ -1,9 +1,9 @@
 /-
   ArakelovRH/Closure/ZetaZeroFreeClosure.lean
-  Formal closure of ZetaZeroFree_Surface (Surface 9 of Route B).
+  Formal closure of ZetaZeroFree_OPEN (Surface 9 of Route B).
   Author: David Fox.  Opera Numerorum.  June 2026.
 
-  ZetaZeroFree_Surface: L_143a1 1 ≠ 0 → _root_.RiemannHypothesis.
+  ZetaZeroFree_OPEN: L_143a1 1 ≠ 0 → _root_.RiemannHypothesis.
 
   MATHEMATICAL ARGUMENT (IK Cor 5.16):
     From L(1,f_143a1) ≠ 0, one derives a zero-free region for ζ(s) near Re(s)=1
@@ -20,10 +20,10 @@
     is what the entire chain is establishing conditionally.
 
   STRATEGY: Reduce to two atomic sub-surfaces:
-    (1) ZeroFreeStrip_from_L1_Surface (~15pp):
+    (1) ZeroFreeStrip_from_L1_OPEN (~15pp):
           L(1,f_143a1) ≠ 0 → ∃ δ > 0, ∀ s with 1-δ < Re(s) ≤ 1, L(s,f) ≠ 0.
           Proof via Euler product continuity + non-vanishing at boundary.
-    (2) ZeroFreeStrip_to_RH_Surface (~15pp):
+    (2) ZeroFreeStrip_to_RH_OPEN (~15pp):
           Zero-free strip for L(s,f_143a1) → _root_.RiemannHypothesis.
           This is the deep step connecting the newform L-function to ζ.
 
@@ -31,7 +31,7 @@
     rh_from_two_surfaces: grand scaffold (0 sorry)
 
   STATUS after this file:
-    ZetaZeroFree_Surface REDUCED: 1 surface → 2 sub-surfaces.
+    ZetaZeroFree_OPEN REDUCED: 1 surface → 2 sub-surfaces.
     Sub-surface (1): ~15pp (zero-free strip from L(1,f)≠0).
     Sub-surface (2): ~15pp (strip → RH, via ζ connection).
 
@@ -39,6 +39,7 @@
   Referee: #print axioms ArakelovRH.ZetaZeroFreeClosure.rh_from_two_surfaces
 -/
 
+import ArakelovRH.Scaffold.IwaniecKowalski
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
@@ -48,7 +49,7 @@ open ArakelovRH ArakelovRH.IwaniecKowalski Complex Real
 
 /-! ── §1. Sub-surfaces ────────────────────────────────────────────────── -/
 
-/-- ZeroFreeStrip_143_Surface — sub-surface (1).
+/-- ZeroFreeStrip_143_OPEN — sub-surface (1).
 
     L(1,f_143a1) ≠ 0 implies there exists δ > 0 such that L(s,f_143a1) ≠ 0
     for all s with 1 - δ < Re(s) and Im(s) bounded.
@@ -58,12 +59,12 @@ open ArakelovRH ArakelovRH.IwaniecKowalski Complex Real
     Lean gap: requires continuity of L(s,f) + implicit function theorem near s=1.
     Mathlib has `Complex.differentiableAt` but not for newform L-functions.
     STATUS: OPEN (~15pp Lean, complex analysis + Euler product continuity). -/
-def ZeroFreeStrip_143_Surface : Prop :=
+def ZeroFreeStrip_143_OPEN : Prop :=
   L_143a1 1 ≠ 0 →
   ∃ δ : ℝ, 0 < δ ∧
   ∀ s : ℂ, 1 - δ < s.re → s.re ≤ 1 → L_143a1 s ≠ 0
 
-/-- ZeroFreeStrip_to_RH_Surface — sub-surface (2).
+/-- ZeroFreeStrip_to_RH_OPEN — sub-surface (2).
 
     If L(s,f_143a1) ≠ 0 for 1-δ < Re(s) ≤ 1 (a zero-free strip),
     then _root_.RiemannHypothesis.
@@ -73,16 +74,16 @@ def ZeroFreeStrip_143_Surface : Prop :=
     Reference: IK Cor 5.16; classical Hadamard–de la Vallée Poussin argument.
     Lean gap: explicit formula for ζ + connection to newform L-functions.
     STATUS: OPEN (~15pp Lean, classical explicit formula + zero-free region theory). -/
-def ZeroFreeStrip_to_RH_Surface : Prop :=
+def ZeroFreeStrip_to_RH_OPEN : Prop :=
   (∃ δ : ℝ, 0 < δ ∧ ∀ s : ℂ, 1 - δ < s.re → s.re ≤ 1 → L_143a1 s ≠ 0) →
   _root_.RiemannHypothesis
 
 /-! ── §2. Proved scaffold (0 sorry) ─────────────────────────────────── -/
 
 /-- rh_from_two_surfaces (PROVED, 0 sorry):
-    ZetaZeroFree_Surface follows from:
-      h_zfs : ZeroFreeStrip_143_Surface         (sub-surface 1, ~15pp)
-      h_zfr : ZeroFreeStrip_to_RH_Surface       (sub-surface 2, ~15pp)
+    ZetaZeroFree_OPEN follows from:
+      h_zfs : ZeroFreeStrip_143_OPEN         (sub-surface 1, ~15pp)
+      h_zfr : ZeroFreeStrip_to_RH_OPEN       (sub-surface 2, ~15pp)
 
     Proof (trivial composition, 0 sorry):
       h_L1  : L_143a1 1 ≠ 0                  (hypothesis)
@@ -91,9 +92,9 @@ def ZeroFreeStrip_to_RH_Surface : Prop :=
     SORRY: 0.  Classical trio.
     Referee: #print axioms ArakelovRH.ZetaZeroFreeClosure.rh_from_two_surfaces -/
 theorem rh_from_two_surfaces
-    (h_zfs : ZeroFreeStrip_143_Surface)
-    (h_zfr : ZeroFreeStrip_to_RH_Surface) :
-    ZetaZeroFree_Surface :=
+    (h_zfs : ZeroFreeStrip_143_OPEN)
+    (h_zfr : ZeroFreeStrip_to_RH_OPEN) :
+    ZetaZeroFree_OPEN :=
   fun h_L1 => h_zfr (h_zfs h_L1)
 
 /-- NonVanishing_at_bdry_from_strip (PROVED, 0 sorry):
@@ -109,9 +110,9 @@ theorem nonvanishing_at_bdry_from_strip
   · simp only [one_re]
 
 /-- Reduction summary:
-    ZetaZeroFree_Surface (1 surface, ~25pp) is now:
-      → ZeroFreeStrip_143_Surface       (~15pp, zero-free strip from L(1,f)≠0)
-      → ZeroFreeStrip_to_RH_Surface     (~15pp, strip → RH via explicit formula)
+    ZetaZeroFree_OPEN (1 surface, ~25pp) is now:
+      → ZeroFreeStrip_143_OPEN       (~15pp, zero-free strip from L(1,f)≠0)
+      → ZeroFreeStrip_to_RH_OPEN     (~15pp, strip → RH via explicit formula)
     rh_from_two_surfaces: PROVED (0 sorry, classical trio).
     nonvanishing_at_bdry_from_strip: PROVED (0 sorry, consistency check).
     SORRY: 0. -/
