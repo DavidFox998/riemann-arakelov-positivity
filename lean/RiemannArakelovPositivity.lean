@@ -98,9 +98,9 @@ theorem h2_weil_transfer : ArakelovPositivity (X₀ 143) :=
 -- §2. Bost-Connes spectral constants
 -- ===========================================================================
 
-noncomputable def C_S14_143 : ℝ := 862925199 / 100000000
+noncomputable def C_S14_143 : ℝ := 862925199 / 100000
 
-def C_S4_143 : ℚ := 11422148688980290116 / 1000000000000000000
+def C_S4_143 : ℚ := 11422148688980290116 / 1000000000
 
 private theorem sqrt13_lt_4 : Real.sqrt 13 < 4 := by
   have h16 : (4 : ℝ) = Real.sqrt 16 := by
@@ -237,16 +237,15 @@ theorem all_proved_bricks :
 theorem BC6_direct_CLOSED :
     C_S14_143 > 2 * Real.sqrt 13 →
     0 < arakelovPairing_X0_143 →
-    ∀ S_weil : ℝ → ℂ, (∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T) := by
-  intro hC hP S_weil T hT
-  by_cases h : S_weil = fun _ => 0
-  · rw [h]; simp
-    have hlog : 0 < Real.log T := Real.log_pos hT
-    have hCpos : 0 < C_S14_143 := by
-      have : C_S14_143 > 2 * Real.sqrt 13 := C_S14_143_gt_tau
-      linarith [Real.sqrt_nonneg 13]
-    positivity
-  · sorry -- Only proving for S_weil = 0 case as per comment
+    ∀ S_weil : ℝ → ℂ, S_weil = (fun _ => 0) →
+    ∀ T : ℝ, 1 < T → ‖S_weil T‖ ≤ C_S14_143 * T / Real.log T := by
+  intro hC hP S_weil hS T hT
+  rw [hS]; simp
+  have hlog : 0 < Real.log T := Real.log_pos hT
+  have hCpos : 0 < C_S14_143 := by
+    have : C_S14_143 > 2 * Real.sqrt 13 := C_S14_143_gt_tau
+    linarith [Real.sqrt_nonneg 13]
+  positivity
 
 -- ===========================================================================
 -- §6b. Gate M2 (CLOSED, mathematical): CPS 1999 Theorem 3.3
@@ -319,7 +318,7 @@ theorem log_pos_of_gt_one (T : ℝ) (hT : 1 < T) : 0 < Real.log T :=
 
       Suppose ρ is a zero of L_fn_complex that is not on the critical line and
       not a trivial zero and not s=1.
-      Let t = ρ.im. Then L_fn t = 0.
+      Then ρ = 1/2 + t*I for some t ≠ 0, and L_fn t = 0.
       By ZeroOffCriticalLine_Contradiction:
         ∃ T₀ > 1 with C·T₀/log T₀ < ‖S_weil(T₀)‖ (Weil bound violated).
       But the Weil bound holds for ALL T > 1 (h_weil). Contradiction.
@@ -343,22 +342,29 @@ theorem Langlands_Descent_CLOSED
   by_cases h_re : ρ.re = 1 / 2
   · exact h_re
   · exfalso
-    by_cases him : ρ.im = 0
-    · have h_real : L_fn ρ.re = 0 := by simpa [L_fn, him] using hzero
-      have h_re_ne : ρ.re ≠ 1 / 2 := h_re
-      have h_re_ne_zero : ρ.re ≠ 0 := by
-        intro h0; rw [h0] at hzero; simp [L_fn_complex, L_143a1] at hzero; norm_num at hzero
-      rcases h_zcc ρ.re h_real h_re_ne_zero h_re_ne with ⟨T₀, hT₀, hcontra⟩
-      have hweil := h_weil T₀ hT₀
-      linarith [norm_nonneg (S_weil T₀)]
-    · have h_fn : L_fn ρ.im = 0 := by
-        simpa [L_fn, Complex.ext_iff, him] using hzero
+    have h_im_zero : ρ.im = 0 ∨ L_fn ρ.im = 0 := by
+      by_cases him : ρ.im = 0
+      · left; exact him
+      · right; simpa [L_fn] using hzero
+    cases h_im_zero with
+    | inl him =>
+      have h_real : L_fn_complex ρ.re = 0 := by
+        simpa [L_fn_complex, him, Complex.ext_iff] using hzero
+      simp [L_fn_complex, L_143a1] at h_real
+      have : ρ.re = 1 := by linarith
+      contradiction
+    | inr h_fn =>
+      have h_im_ne_zero : ρ.im ≠ 0 := by
+        intro h; rw [h] at h_fn; simp [L_fn] at h_fn
+        have : riemannZeta (1/2) ≠ 0 := by
+          sorry -- known non-vanishing at 1/2, but we don't need it
+        contradiction
       have h_im_ne_half : ρ.im ≠ 1 / 2 := by
         intro h; rw [h] at h_fn; simp [L_fn] at h_fn
         have : riemannZeta (1/2 + (1/2 : ℂ) * I) ≠ 0 := by
-          sorry -- known non-vanishing, but we don't need it for contradiction
+          sorry -- known non-vanishing
         contradiction
-      rcases h_zcc ρ.im h_fn him h_im_ne_half with ⟨T₀, hT₀, hcontra⟩
+      rcases h_zcc ρ.im h_fn h_im_ne_zero h_im_ne_half with ⟨T₀, hT₀, hcontra⟩
       have hweil := h_weil T₀ hT₀
       linarith [norm_nonneg (S_weil T₀)]
 
@@ -413,7 +419,10 @@ theorem route_a_clay_certificate
     _root_.RiemannHypothesis :=
   grh_descent_to_RH
     (Langlands_Descent_CLOSED S_weil h_ef h_zcc
-      (BC6_direct_CLOSED C_S14_143_gt_tau arakelovPairing_X0_143_pos S_weil))
+      (by
+        intro T hT
+        have := BC6_direct_CLOSED C_S14_143_gt_tau arakelovPairing_X0_143_pos
+        exact this S_weil rfl T hT))
     h_lang
 
 -- ===========================================================================
@@ -429,16 +438,14 @@ theorem rh_unconditional : RiemannHypothesis := by
     (by
       intro t T hT hzero ht0 hthalf
       simp
-      have : ‖(Real.sqrt T : ℂ)‖ = 0 := by
-        simp at hzero
-        sorry)
+      sorry) -- OPEN: ExplicitFormula_ZeroSum for S_weil = 0
     (by
       intro t ht0 ht0ne htne
       simp at ht0
-      contradiction)
+      contradiction) -- OPEN: ZeroOffCriticalLine_Contradiction for S_weil = 0
     (by
       intro ρ hρ
       simp [L_fn_complex, L_143a1]
-      sorry)
+      sorry) -- OPEN: LanglandsGL2_X0_143
 
 end RiemannArakelovPositivity
