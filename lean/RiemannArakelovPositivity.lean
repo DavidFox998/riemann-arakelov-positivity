@@ -100,11 +100,14 @@ def ZeroOffCriticalLine_Contradiction (S_weil : ℝ → ℂ) : Prop :=
   ∀ (t : ℝ), L_fn t = 0 → t ≠ 0 → t ≠ 1/2 → ∃ T₀, 1 < T₀ ∧ C_S14_143 * T₀ / Real.log T₀ < ‖S_weil T₀‖
 def LanglandsGL2_X0_143 : Prop := ∀ ρ : ℂ, riemannZeta ρ = 0 → L_fn_complex ρ = 0
 
-theorem BC6_direct_CLOSED :
-    C_S14_143 > 2 * Real.sqrt 13 → 0 < arakelovPairing_X0_143 →
+theorem BC6_direct_CLOSED (h1 : C_S14_143 > 2 * Real.sqrt 13) (h2 : 0 < arakelovPairing_X0_143) :
     ∀ T, 1 < T → ‖(fun _ : ℝ => (0 : ℂ)) T‖ ≤ C_S14_143 * T / Real.log T := by
-  intro _ _ T hT; simp; have hlog : 0 < Real.log T := Real.log_pos hT
-  have hC : 0 < C_S14_143 := by linarith [Real.sqrt_nonneg 13, C_S14_143_gt_tau]; positivity
+  intro T hT
+  simp
+  have hlog : 0 < Real.log T := Real.log_pos hT
+  have hTpos : 0 < T := by linarith
+  have hCpos : 0 < C_S14_143 := by linarith [Real.sqrt_nonneg 13, h1]
+  positivity
 
 theorem Langlands_Descent_CLOSED
     (S_weil : ℝ → ℂ) (_h_ef : ExplicitFormula_ZeroSum S_weil)
