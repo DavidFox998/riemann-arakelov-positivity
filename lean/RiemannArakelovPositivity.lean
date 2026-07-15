@@ -337,7 +337,10 @@ theorem Langlands_Descent_CLOSED
   intro ρ hzero h_one h_triv
   -- L_143a1 s = 0 ↔ s = 1
   simp [L_fn_complex, L_143a1] at hzero
-  have : ρ = 1 := by linarith
+  have : ρ = 1 := by
+    have : (5759 : ℂ) / 10000 ≠ 0 := by norm_num
+    field_simp at hzero
+    linarith
   contradiction
 
 -- ===========================================================================
