@@ -61,8 +61,8 @@ Files tell story step by step with proofs Lean can check.
 
 ---
 
-
 ## Author
 
 David J. Fox · Independent researcher · Aberdeen, WA
 ORCID: [0009-0008-1290-6105](https://orcid.org/0009-0008-1290-6105) · Opera Numerorum — 2026
+**Ensemble:** `sha256:e1617bc96018da4577f153f2e0cd8cc4eda1183434a9624b6cefaedc655db6c5` · hub [`rh-p5-bridge-14`](https://github.com/DavidFox998/rh-p5-bridge-14) · anchor `d04e4bd1`
