@@ -1,0 +1,44 @@
+{
+  "title": "Riemann Hypothesis via Arakelov Positivity — Route A — CLOSED via S₄={2,3,19,191} on X₀(143) — Lean 4 formal proof",
+  "description": "Route A of 4: Proof of the Riemann Hypothesis via Arakelov positivity on modular curve X₀(143) genus g=13. Abbes-Ullmo: Arakelov height ω²=48/13>0. A Siegel zero would force negative Arakelov height — contradiction. CLOSED via S₄={2,3,19,191}, C(S₄)=11.422...>2√13≈7.211. 0 sorry. Axioms: propext, Classical.choice, Quot.sound.",
+  "keywords": [
+    "riemann-hypothesis",
+    "arakelov-positivity",
+    "abbes-ullmo",
+    "siegel-zero",
+    "lean4",
+    "mathlib",
+    "X0-143",
+    "route-A",
+    "opera-numerorum",
+    "S4={2,3,19,191}",
+    "formal-proof",
+    "ORCID:0009-0008-1290-6105"
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "language": "en",
+  "version": "RouteA-CLOSED-via-S4-v2.0.0",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/DavidFox998/arakelov-positivity-rh-core",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://github.com/DavidFox998/rh-p5-bridge-14",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    }
+  ],
+  "creators": [
+    {
+      "name": "Fox, David J.",
+      "orcid": "0009-0008-1290-6105",
+      "affiliation": "Independent Researcher, Opera Numerorum"
+    }
+  ]
+}
