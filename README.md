@@ -25,115 +25,6 @@ If Arakelov positivity holds true; RH must also hold true.
 
 Files tell story step by step with proofs Lean can check.
 
----
-### Companion repos — Opera Numerorum — Four Formulizations, One Opera:
-
-The Opera Numerorum is not four separate proofs. It is one opera sung in four voices — Positivity, Descent, Growth, and Symmetry — all closing on the same stage X₀(143). S₄={2,3,19,191} is the chord that resolves all four.
-
-- [arakelov-rh-descent](https://github.com/DavidFox998/arakelov-rh-descent) (Route B) — Kim-Sarnak Spectral Descent — CLOSED — 35pp BC6 — 0 open surfaces — ArakelovRH_BC6_Final.lean 20450 bytes 0 sorry 8/8 closed
-- [rh-growth-contradiction](https://github.com/DavidFox998/rh-growth-contradiction) (Route C) — Growth Contradiction — CLOSED via S₄ — Cathedral Door green exp(c√(log t/log log t)) dominates (log t)² — S₄ 4 primes → GRH X₀(143) → H4 12/11 → RH
-- [brothers-desert-proof](https://github.com/DavidFox998/brothers-desert-proof) (Route D) — Self-Symmetry via Dirichlet Jitter & Orbit — CLOSED via S₄ — 35 brothers collision-free swarming — Dirichlet-measured jitter ||p·α₀||<1/p creates desert off line — Galois orbit stability + functional equation self-duality forces Re=1/2 — study zeta via orbit thus proving R=1/2
-
-## How Route A Relates to Route B, Route C, and Route D
-
-### Route A: This Repo — Arakelov Positivity — CLOSED via S₄
-Shape with positive curvature ω=24>0 → zeta zeros line up. Empirical: g=13 ω=2g-2=24>0 C01 fix hardcoded 0→24 C01 db291fc7... 0 sorries C07 0f7faf2c... 0 sorries 15 total architecture certified — ω=48/13>0 Abbes-Ullmo Duke 1996 Thm1.2 — plus S₄ C=11.422>2√13 margin +4.211 M9 → GRH X₀(143) → H4 12/11 M21+M22 → RH — CLOSED FINAL.
-
-### Route B: [arakelov-rh-descent](https://github.com/DavidFox998/arakelov-rh-descent) — Kim-Sarnak Spectral Descent — CLOSED 35pp BC6
-Zeros from spectrum Laplacian hyperbolic surface — spectral gap λ₁≥975/4096 Kim-Sarnak → Selberg trace = Bost-Connes spectral action → GRH L(s,X₀(143)) → Langlands → RH ζ. Empirical: Paper1 BC6_SelbergMatch 15pp Selberg trace Γ₀(143) vol=56π vol/4π=14 index=168 genus=13 4 cusps — Paper2 BC6_SpectralBC95 20pp Bost-Connes C*(Q/Z)⋊N× Hecke algebra — Logical skeleton fully closed: Kim-Sarnak λ₁≥975/4096 → Selberg Trace=Spectral (Paper1 15pp) → GRH L(s,X₀(143)) → Langlands functoriality → RH ζ — 4 Steps 0 Open Surfaces All CLOSED via BC6 35pp Step1 Kim-Sarnak Gate K1 CLOSED 0 sorry ArakelovRH_BC6_Final.lean 20450 bytes 0 sorry 8/8 closed — Relation: Route B spectral gap hard analysis — Route A S₄ 4 primes elementary — both use X₀(143) as bridge — Route B 35pp CLOSED Route A CLOSED via S₄ — companion.
-
-### Route C: [rh-growth-contradiction](https://github.com/DavidFox998/rh-growth-contradiction) — Growth Contradiction — CLOSED via S₄
-Assume |ζ(½+it)|≤C(log t)² small — Littlewood 1924 says huge exp(c√(log t/log log t)) i.o. — contradiction — small bound false — green Cathedral Door — with zero repulsion (zeros repel) RH follows — exceptional 4 primes {2,3,19,191} give C=11.422>2√13 → GRH X₀(143) → H4 12/11 → RH — 1/2 res=riemannZeta. Empirical: growthbound.lean exp(c√(log t/log log t)) dominates (log t)² PROVED 0 sorry green — S₄={2,3,19,191} M4 b810a7a3... complete to 10⁴⁰⁰⁰ C=11.422 M5 9df98a39... >2√13=7.211 margin +4.211 YES M9 624b93f7... M9 margin 0.108 ratio1.009 g≤32 M10 margin 0.04 ratio1.001 g≤408 incl g=33 p5 boundary — Ingham quantitative c₁=D_eff/(1+eps)(β₀-½)≈0.5227(β₀-½) β₀=0.9→0.209>0.2 ratio1.045>1 → no zero β>0.9 if GrowthBound_new0.2 Deuring-Heilbronn closed at p5 — H4 12/11 M21+M22 err0.85% transfers GRH→RH — 1/2 res=riemannZeta CLOSED FINAL RouteC_Unconditional_S4.lean — Relation: Route A ω=24>0 simplest Route B spectral deepest Route C S₄ most elementary — all three use X₀(143) g=13 as bridge — all CLOSED via S₄.
-
-### Route D: [brothers-desert-proof](https://github.com/DavidFox998/brothers-desert-proof) — Self-Symmetry via Dirichlet Jitter & Orbit — CLOSED via S₄ — The Fourth Voice
-The Opera Numerorum closes in symmetry. If Routes A-C prove RH by positivity, descent, and growth, Route D proves it by self-mirroring — the zeta function studying itself.
-
-Clay Ref — Self-Symmetry Formulization: Because of a Dirichlet-measured jitter ||p·α₀||<1/p and stable Galois orbit, we can study zeta thus proving R=1/2. Concretely: 35 brothers (Dirichlet characters mod 143 and family) exhibit collision-free swarming. Their L-functions jitter in synchrony with ||p·α₀||, creating a measured desert off the critical line. The functional equation s ↔ 1-s gives self-duality; the orbit under Gal(Q̄/Q) is stable because C(S₄)=11.422>2√13. Off-line zeros would break orbit symmetry and violate jitter bound. Therefore all non-trivial zeros are fixed by self-duality → Re=1/2.
-
-Empirical: S₄={2,3,19,191} same 4 primes — M4 b810a7a3... complete to 10⁴⁰⁰⁰ — D_eff=0.5235 < D_Apoll=1.3057 — eps=1/625.789=5⁴ — orbit closure certified — Dirichlet jitter bound ||p·α₀||<1/p PROVED decide — desert creation off line PROVED — self-duality s↔1-s forces symmetry — H4 12/11 M21+M22 transfers GRH X₀(143) → RH ζ(s) — 1/2 res=riemannZeta — CLOSED FINAL.
-
-Relation: Route A is curvature ω²=48/13>0 — Route B is spectrum λ₁≥975/4096 — Route C is growth exp(c√(log t/log log t)) — Route D is symmetry jitter+orbit — four formulizations, one Opera — all four CLOSED via same S₄={2,3,19,191} — all four use X₀(143) g=13 as stage — Opera Numerorum.
-
----
-
-### Dependency Graph
-
-§1 ArithmeticSurface ω²=4(g-1)/g ArakelovPositivity 0<ω²
- ↓
-§2 X₀(N) genus 13 if N=143 else 1 — X₀_143_genus PROVED 0 sorry
- ↓
-§3 Arithmetic Γ₀(143) index 168 =11·13·12/11·14/13 — cusps 4 divisors {1,11,13,143} — genus formula 1+168/12-4/2=13 — area 56 Weyl coeff 14 — S4={2,3,19,191} 4 primes PROVED decide
- ↓
-§4 Abbes-Ullmo 1996 Thm1.2 genus≥2 → ArakelovPositivity — ω²=48/13>0 — arakelov_positivity_X0_143 PROVED 0 sorry — h2_weil_transfer PROVED
- ↓
-§5 Bost-Connes threshold C_S4=Σ p log p/(p-1)=11.422... >0 PROVED log p>0 — √13<4 nlinarith sq_sqrt — 2√13<8 — bost_connes_threshold 2√13<320 — NEW C_S4>2√13 M5 certified margin+4.211 YES CLOSED — K∞=2511/500 K143=35/3 log11+12 log13+K∞ — arakelovPairing_X0_143=24 log143-K143 — log11>1 exp1<d9 — log143=log11+log13 — arakelovPairing_X0_143_pos>0 PROVED
- ↓
-§6 Bridge ArakelovPositivity→RH — OLD OPEN def : Prop — NOW CLOSED via S4 — C_S4_gt_2sqrt13 M5 + M9 GRH X0(143) + H4 12/11 M21+M22 → RH — ArakelovPositivity_to_RH_CLOSED — RH_from_arakelov_positivity_unconditional PROVED — RouteA_CLOSED_via_S4 Clay_RH ∀ρ zeta ρ=0→Re=1/2 — 1/2 res=riemannZeta CLOSED FINAL
-
-### File-by-File — Complete Overview
-
-§1 ArithmeticSurface conductor genus — arakelovSelfIntersection 4(g-1)/g — ArakelovPositivity 0<ω²
-
-§2 X₀(N) genus if N=143 then13 else1 — X₀_143_genus PROVED unfold if_pos norm_num 0 sorry — sq_free_143 Squarefree 143 intro d hd d*d≤143 d≤11 interval_cases d exact isUnit_one norm_num at hd — conductor_factored 11*13 norm_num — prime_11 prime_13 decide
-
-§3 Arithmetic Γ₀(143) index_gamma0_143 11*13*(1+1/11)*(1+1/13)=168 norm_num — cusps_143 divisors 143={1,11,13,143} decide — num_cusps_143 card=4 decide — genus_formula_143 1+168/12-4/2=13 norm_num — area_gamma0_143 168/3=56 norm_num — weyl_coeff_143 56/4=14 norm_num — S4 {2,3,19,191} Finset — s4_members_prime ∀p∈S4 Prime decide — s4_card 4 decide
-
-§4 Abbes-Ullmo 1996 Thm1.2 — arakelovSelfIntersection_X0_143 48/13 unfold rw X₀_143_genus norm_num — arakelov_positivity_X0_143 0<48/13 norm_num 0 sorry — abbes_ullmo_1996_1_2 N hg 2≤genus → ArakelovPositivity via 0<genus 0<genus-1 div_pos mul_pos norm_num hsub hpos — Citation Duke Math J 80 1996 no2 295-307 Thm1.2 Local proof ω²=4(g-1)/g g≥2 numerator 4(g-1)≥4>0 denominator≥2>0 quotient positive Abbes-Ullmo guarantees stronger true-intersection — h2_weil_transfer ArakelovPositivity X0 143 via abbes_ullmo 143 genus13≥2
-
-§5 Bost-Connes threshold and Arakelov pairing — C_S4 noncomputable 2log2+3log3/2+19log19/18+191log191/190 Certified 11.4221 mpmath 64dps Bost-Connes 1995 Selecta Math 1 411-457 — C_S4_pos 0<C_S4 via log2>0 log3>0 log19>0 log191>0 linarith 0 sorry — sqrt13_lt_4 √13<4 nlinarith sq_sqrt sqrt_nonneg — two_sqrt_13_lt_8 2√13<8 linarith sqrt13_lt_4 — bost_connes_threshold 2√13<320 via X0 143 genus=13 exact_mod_cast rw hg linarith sqrt13_lt_4 — NEW C_S4_gt_2sqrt13 C_S4>2√13 M5 100dps C=11.422>7.211 margin+4.211 YES — K_infty_143 2511/500 Jorgenson-Kramer 1996 archimedean contribution — K_143_val 35/3 log11+12 log13+K∞ — arakelovPairing_X0_143 24 log143-K143 — log_11_gt_one 1<log11 via exp1<11 log_lt_log exp_pos h_exp log_exp — log_143_eq_log_11_add_log_13 log143=log11+log13 via 143=11*13 log_mul — arakelovPairing_X0_143_pos 0<arakelovPairing via h11 1<log11 h13 0<log13 unfold K 24log143=24log11+24log13 linarith
-
-§6 Bridge ArakelovPositivity→RH — OLD def ArakelovPositivity_to_RH : Prop := ArakelovPositivity (X0 143)→RiemannHypothesis OPEN surface — Math content Abbes-Ullmo→Bost-Connes→Selberg trace→Weil bound→GRH→Langlands transfer→RH requires Selberg trace formula Weil explicit formula Langlands functoriality none in Mathlib v4.12.0 Citation Abbes-Ullmo1996 Bost-Connes1995 Selberg1956 Weil1952 Langlands1970 def : Prop not axiom not sorry not opaque names surface without assuming — NOW CLOSED via S4 — NEW theorem ArakelovPositivity_to_RH_CLOSED: ArakelovPositivity→RH via S4 C=11.422>2√13 M9 624b93f7...→GRH X0(143) unconditional →H4 12/11 M21 b7415927...+M22 5a5a345f...→RH — sorry H2_WeilTransfer formalization M21 0 sorries for C07 15 total chain architecture certified
-
-§7 Conditional closing bridge gives RH PROVED — RH_from_arakelov_positivity h_bridge : ArakelovPositivity_to_RH → RiemannHypothesis via h_bridge arakelov_positivity_X0_143 — SORRY:0 Axiom footprint {propext Classical.choice Quot.sound}
-
-§8 UNCONDITIONAL Route A CLOSED via S4 FINAL — RH_from_arakelov_positivity_unconditional : RiemannHypothesis via ArakelovPositivity_to_RH_CLOSED arakelov_positivity_X0_143 — Clay version RouteA_CLOSED_via_S4 : Clay_RH := ∀ρ zeta ρ=0→Re=1/2 via S4 4 primes→C=11.422>2√13→GRH X0(143)→H4 12/11→RH 1/2 res=riemannZeta CLOSED FINAL — H2_WeilTransfer
-
-### Summary of Honest Ledger — CLOSED FINAL No OPENs — Four Voices, One Opera
-
-| Surface | Mathematical content | Status |
-|---------|----------------------|--------|
-| ArakelovPositivity X0(143) ω²=48/13>0 | Abbes-Ullmo 1996 Thm1.2 genus≥2→Positivity — arakelov_positivity_X0_143 | PROVED 0 sorry |
-| C_S4=Σ p log p/(p-1) S4={2,3,19,191} | 2log2+3log3/2+19log19/18+191log191/190=11.422... M5 9df98a39... | PROVED >0 |
-| C_S4>2√13 | 11.422>7.211 margin+4.211 YES — C_S4_gt_2sqrt13 M5 100dps — 2√13<8 √13<4 | CLOSED M5 certified — was 2√13<320 trivial — now tight |
-| M9_GRH_X0_143 | C(S4)>2√g + Ramanujan |a_p|≤2√p Deligne Bourbaki355 + no CM LMFDB → GRH X0(143) Re=1/2 — 1/2 res=L(s,X0(143)) — BC1995 Thm6 | CLOSED 624b93f7... unconditional |
-| H4_transfer 12/11 | M*(S)=12/11 mod H4 Tr(ω)=12/11·ω algebraic — M21 b7415927... H2_WeilTransfer + M22 5a5a345f... M* three forms cliff k_c=3.183=π dC/dk=45933 — err0.8588% CERT. | CLOSED |
-| Route D — Brothers Desert — Self-Symmetry | Dirichlet jitter ||p·α₀||<1/p + Galois orbit 35 brothers collision-free swarming → desert off line → self-duality s↔1-s → Re=1/2 — [brothers-desert-proof](https://github.com/DavidFox998/brothers-desert-proof) | CLOSED via S4 — same S4, same M9, same H4 — symmetry voice of Opera Numerorum |
-| ArakelovPositivity_to_RH | ArakelovPositivity(X0(143))→RiemannHypothesis — OLD def OPEN surface Abbes-Ullmo→Bost-Connes→Selberg→Weil→GRH→Langlands→RH absent Mathlib v4.12.0 | CLOSED via S4 — ArakelovPositivity_to_RH_CLOSED S4→GRH X0(143) M9→H4 12/11 M21+M22→RH — 1/2 res=riemannZeta |
-| RH_from_arakelov_positivity | bridge→RH conditional via h_bridge arakelov_positivity_X0_143 | PROVED 0 sorry |
-| RouteA_CLOSED_via_S4 | Clay_RH ∀ρ zeta ρ=0→Re=1/2 S4 4 primes C=11.422>2√13→GRH X0(143) M9→H4 12/11 M21+M22→RH | CLOSED FINAL 1/2 res=riemannZeta |
-
-Total: 281 lines original 0 sorry 1 Open Surface → NOW 0 Open Surfaces CLOSED FINAL via S4 — 4 exceptional primes {2,3,19,191} close all four routes — Opera Numerorum.
-
-### Roadmap — UPDATED — All CLOSED — Opera in Four Acts
-
-**Act I — Positivity (Route A):** Shape with positive curvature ω=24>0 → zeros line up — ω=48/13>0 Abbes-Ullmo — CLOSED via S4
-
-**Act II — Descent (Route B):** Spectrum λ₁≥975/4096 Kim-Sarnak → Selberg trace = Bost-Connes → GRH L(s,X₀(143)) → Langlands → RH — 35pp BC6 CLOSED
-
-**Act III — Growth (Route C):** Cathedral Door green — exp(c√(log t/log log t)) dominates (log t)² — Littlewood contradiction — zero repulsion — CLOSED via S4
-
-**Act IV — Symmetry (Route D):** Dirichlet jitter ||p·α₀||<1/p + 35 brothers orbit — desert off line — self-duality s↔1-s — collision-free swarming — R=1/2 — CLOSED via S4 — The Fourth Voice that proves RH by studying zeta through its own mirror.
-
-Step1 Bost-Connes threshold — CLOSED — Arithmetic 2√13<320 C(S4)>0 ✅ — Analytic BC convergence gives spectral bound C(S4)>2√13 M5 9df98a39... margin+4.211 YES ✅ — was partial ~5pp Lean — NOW CLOSED
-
-Step2 Selberg trace formula ~40pp — CLOSED via M9 — Selberg trace for Γ0(143) spectrum↔geometry → Weil bound |S_weil(T)|≤C·T/log T — CLOSED via Bost-Connes Thm6 C>2√g → GRH — not need full Selberg
-
-Step3 Weil bound → GRH ~15pp — CLOSED via M9 — Explicit formula zero-sum analysis + Off-critical zero violates Weil bound — GRH L-function X0(143) Re=1/2 — M9 624b93f7...
-
-Step4 GRH + Langlands → RH ~25pp — CLOSED via H4 12/11 — GL2 functoriality ζ zeros→L(s,X0(143)) zeros + GRH for L-function→RH for ζ — M21 b7415927... + M22 5a5a345f... — 1/2 res=riemannZeta
-
-Clay Rule Compliance: sorry 0 axiom 0 beyond classical trio opaque 0 native_decide 0 vacuous-trivial 0 Axiom footprint {propext, Classical.choice, Quot.sound}
-
-Repository Structure: lean/ RiemannArakelovPositivity.lean Main file 281 lines original → NOW CLOSED via S4 additional §8 RouteA_CLOSED_via_S4 — §1 ArithmeticSurface ArakelovPositivity §2 X0(143) genus=13 conductor=143 squarefree §3 Arithmetic Γ0(143) index cusps genus Weyl coeff §4 Abbes-Ullmo 1996 genus≥2→ArakelovPositivity PROVED §5 Bost-Connes threshold and Arakelov pairing PROVED + NEW C_S4>2√13 M5 certified §6 Bridge ArakelovPositivity→RH def OPEN → NOW CLOSED via S4 theorem §7 Conditional bridge→RH PROVED §8 Unconditional RouteA CLOSED via S4 FINAL Clay_RH
-
-Standalone. Imports only Mathlib. No cross-repo imports. Part of Opera Numerorum 19 — Brain [zerobeacon](https://github.com/DavidFox998/zerobeacon) — Archive [pistus-theoria](https://github.com/DavidFox998/pistus-theoria) — PDF `OperaNumerorum_MasterEquations.pdf` SHA `7f6b31b4...` — Certs `Certs/m4.out = Complete: True`
-
-### Build
-
-lake build
-
-Route A CLOSED via S4 — S4 4 primes C=11.422>2√13 margin+4.211 → GRH X0(143) → H4 12/11 → RH — 1/2 res=riemannZeta — 0 open surfaces — Opera Numerorum Act I — companion Acts II, III, IV CLOSED via same S4
-
 ## Opera Numerorum — 16 repos
 
 **[arakelov-positivity-rh-core](https://github.com/DavidFox998/arakelov-positivity-rh-core) — ROOT V2** — Arakelov height `ω²=48/13>0`; Zoe-M\*, M4 10^4000 boundary — provides the height input that all four RH voices reuse
@@ -170,7 +61,7 @@ Route A CLOSED via S4 — S4 4 primes C=11.422>2√13 margin+4.211 → GRH X0(14
 
 ---
 
-ORCID: [0009-0008-1290-6105](https://orcid.org/0009-0008-1290-6105) · Archive: [pistus-theoria](https://github.com/DavidFox998/pistus-theoria) — `OperaNumerorum_MasterEquations.pdf SHA 7f6b31b4`
+
 ## Author
 
 David J. Fox · Independent researcher · Aberdeen, WA
