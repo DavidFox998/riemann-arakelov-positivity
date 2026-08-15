@@ -1,5 +1,8 @@
 # riemann-arakelov-positivity — Riemann Hypothesis via Arakelov Positivity- CLOSED via S₄
 
+> **Opera Numerorum ensemble** — 19 repos · chain `7472f4e5` · [REPOS.md →](https://github.com/DavidFox998/rh-p5-bridge-14/blob/main/REPOS.md)
+
+
 **David J. Fox** — ORCID 0009-0008-1290-6105 — davidjfox998@gmail.com — Independent researcher — Opera Numerorum — July 2026
 Lean 4.12.0 · Mathlib v4.12.0 · SORRY: 0 classical trio {propext, Classical.choice, Quot.sound}
 
