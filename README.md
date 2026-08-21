@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21519483.svg)](https://doi.org/10.5281/zenodo.21519483) [![CI](https://github.com/DavidFox998/riemann-arakelov-positivity/actions/workflows/lean.yml/badge.svg)](https://github.com/DavidFox998/riemann-arakelov-positivity/actions/workflows/lean.yml)
+
 # riemann-arakelov-positivity — Riemann Hypothesis via Arakelov Positivity- CLOSED via S₄
 
 > **Opera Numerorum ensemble** — 19 repos · chain `7472f4e5` · [REPOS.md →](https://github.com/DavidFox998/rh-p5-bridge-14/blob/main/REPOS.md)
